@@ -1,0 +1,18 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Card from '../components/Booking.astro.jsx';
+import  Calendar  from '../components/Calendar.jsx';
+import NavButtons from '../components/NavButtons.astro';
+import BookingContainer from '../components/BookingContainer.astro';
+---
+
+<Layout title="Welcome to Astro.">
+	<main>
+		<BookingContainer/>
+		<Calendar client:load/>
+	</main>	
+</Layout>
+
+<style>
+
+</style>

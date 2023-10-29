@@ -2,6 +2,12 @@
   "name": "booking-app",
   "type": "module",
   "version": "0.0.1",
+  "mikro-orm": {
+    "useTsNode": true,
+    "configPaths": [
+      "./mikro-orm.config.ts"
+    ]
+  },
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
@@ -16,11 +22,27 @@
     "@fullcalendar/daygrid": "^6.1.9",
     "@fullcalendar/interaction": "^6.1.9",
     "@fullcalendar/react": "^6.1.9",
+    "@headlessui/react": "^1.7.17",
+    "@heroicons/react": "^2.0.18",
+    "@mikro-orm/cli": "^5.9.0",
+    "@mikro-orm/core": "^5.9.0",
+    "@mikro-orm/mongo-highlighter": "^1.0.0",
+    "@mikro-orm/mongodb": "^5.9.0",
     "@types/react": "^18.2.28",
     "@types/react-dom": "^18.2.13",
     "astro": "^3.3.0",
+    "date-fns": "^2.30.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "reflect-metadata": "^0.1.13",
     "tailwindcss": "^3.3.3"
+  },
+  "devDependencies": {
+    "@typescript-eslint/parser": "^6.8.0",
+    "eslint": "^8.52.0",
+    "eslint-plugin-astro": "^0.29.1",
+    "eslint-plugin-react": "^7.33.2",
+    "prettier": "^3.0.3",
+    "prettier-plugin-astro": "^0.12.1"
   }
 }

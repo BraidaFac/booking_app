@@ -1,40 +1,41 @@
 ---
-import NavButtons from '../components/NavButtons.astro';
+import NavButtons from "../components/NavButtons.astro";
 interface Props {
-	title: string;
+  title: string;
 }
 
 const { title } = Astro.props;
-import { ViewTransitions } from 'astro:transitions';
+import { ViewTransitions } from "astro:transitions";
 ---
 
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="description" content="Astro description" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="generator" content={Astro.generator} />
-		<ViewTransitions />
-		<title>{title}</title>
-	</head>
-	<body>
-		<NavButtons/>
-		<slot />
-	</body>
-</html>
-<style is:global>
-	:root {
-		--background: #5DB075
-	}
-	html {
-		font-family: system-ui, sans-serif;
-		background: var(--background);
-		width: 100vw;
-		height: 100vh;
-		margin: 0px;
-		padding: 0px;
-	}
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content="Astro description" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <ViewTransitions />
+    <title>{title}</title>
+  </head>
+  <body>
+    <NavButtons />
+    <slot />
+    <style is:global>
+      :root {
+        --background: #5db075;
+      }
+      html {
+        font-family: system-ui, sans-serif;
+        background: var(--background);
+        width: 100vw;
+        height: 100vh;
+        margin: 0px;
+        padding: 0px;
+      }
+    </style>
 
-</style>
+     ../../config/database
+  </body>
+</html>

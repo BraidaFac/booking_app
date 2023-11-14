@@ -13,9 +13,9 @@ import {
   parseISO,
   startOfToday,
   isSameYear,
-} from "date-fns";
+} from "date-fns/index.js";
 import { useState, useEffect, useRef } from "react";
-import { isBefore } from "date-fns/fp";
+import { isBefore } from "date-fns/fp/index.js";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");

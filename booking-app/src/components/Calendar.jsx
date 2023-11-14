@@ -1,6 +1,5 @@
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
 import ModalShift from "./ModalShift.jsx";
-import MyBookingContainer from "./MyBookingContainer.jsx";
 import {
   add,
   eachDayOfInterval,

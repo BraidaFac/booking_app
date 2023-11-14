@@ -1,18 +1,13 @@
 import { useState, useEffect } from "react";
-import { formatDate } from "../utils/date_formatter";
 import { parseISO } from "date-fns";
-import { el } from "date-fns/locale";
 import Booking from "./Booking.jsx";
 
 export default function BookingContainer(props) {
   const [bookings, setBookings] = useState([]);
   const user = props.user;
 
-  function updateRefresh() {
-    setRefresh((prevRefresh) => !prevRefresh);
-  }
+
   useEffect(() => {
-    console.log("useEffect");
     fetch("/api/booking", { method: "GET" })
       .then((response) => response.json())
       .then((data) => {

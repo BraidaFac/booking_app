@@ -38,7 +38,7 @@ export default function Calendar(props) {
   const firstDayCurrentMonth = parse(currentMonth, "MMM-yyyy", new Date());
 
   useEffect(() => {
-    fetch("http://localhost:4321/api/booking", { method: "GET" })
+    fetch("/api/booking", { method: "GET" })
       .then((response) => response.json())
       .then((data) => {
         setBookings(

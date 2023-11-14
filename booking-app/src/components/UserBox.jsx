@@ -23,7 +23,7 @@ export default function UserBox(props) {
             className="text-white"
             onClick={(e) => {
               e.preventDefault();
-              fetch("http://localhost:4321/api/auth/logout", {
+              fetch("/api/auth/logout", {
                 method: "POST",
               }).then(() => {
                 window.location.href = "/login";

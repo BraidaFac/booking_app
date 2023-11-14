@@ -13,7 +13,7 @@ export default function BookingContainer(props) {
   }
   useEffect(() => {
     console.log("useEffect");
-    fetch("http://localhost:4321/api/booking", { method: "GET" })
+    fetch("/api/booking", { method: "GET" })
       .then((response) => response.json())
       .then((data) => {
         setBookings(
@@ -31,7 +31,7 @@ export default function BookingContainer(props) {
       .catch((error) => console.log(error));
   }, []);
   const onDelete = async (id) => {
-    const res = await fetch(`http://localhost:4321/api/booking/${id}`, {
+    const res = await fetch(`/api/booking/${id}`, {
       method: "DELETE",
     });
     if (res.status === 204) {

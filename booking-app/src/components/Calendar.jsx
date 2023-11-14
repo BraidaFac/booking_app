@@ -1,13 +1,12 @@
-import { Menu, Transition } from "@headlessui/react";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
 import ModalShift from "./ModalShift.jsx";
+import MyBookingContainer from "./MyBookingContainer.jsx";
 import {
   add,
   eachDayOfInterval,
   endOfMonth,
   format,
   getDay,
-  isEqual,
   isSameDay,
   isSameMonth,
   isToday,
@@ -16,84 +15,95 @@ import {
   startOfToday,
   isSameYear,
 } from "date-fns";
-import { Fragment, useState } from "react";
-import bookings from "../data/booking.data.ts";
+import { useState, useEffect, useRef } from "react";
+import { isBefore } from "date-fns/fp";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
-}
-function isSameShift(shift1, shift2) {
-  return shift1 === shift2;
-}
-export default function Calendar() {
-  let [open, setOpen] = useState(false);
-  let today = startOfToday();
-  let [selectedDay, setSelectedDay] = useState(null);
-  let [currentMonth, setCurrentMonth] = useState(format(today, "MMM-yyyy"));
-  let firstDayCurrentMonth = parse(currentMonth, "MMM-yyyy", new Date());
+} /*  */
 
-  let days = eachDayOfInterval({
+function isPass(day) {
+  return isBefore(startOfToday(), day);
+}
+
+export default function Calendar(props) {
+  const [open, setOpen] = useState(false);
+  const [refresh, setRefresh] = useState(false);
+  const [bookings, setBookings] = useState([]);
+  const [bookingDay, setBookingDay] = useState(null);
+  const [selectedDay, setSelectedDay] = useState(null);
+  const today = startOfToday();
+  const [currentMonth, setCurrentMonth] = useState(format(today, "MMM-yyyy"));
+  const user = props.user;
+  const firstDayCurrentMonth = parse(currentMonth, "MMM-yyyy", new Date());
+
+  useEffect(() => {
+    fetch("http://localhost:4321/api/booking", { method: "GET" })
+      .then((response) => response.json())
+      .then((data) => {
+        setBookings(
+          data.map((booking) => {
+            return { ...booking, booking_date: parseISO(booking.booking_date) };
+          }),
+        );
+      })
+      .catch((error) => console.log(error));
+  }, [refresh]);
+  const updateRefresh = () => {
+    setRefresh((prevRefresh) => !prevRefresh);
+  };
+
+  const days = eachDayOfInterval({
     start: firstDayCurrentMonth,
     end: endOfMonth(firstDayCurrentMonth),
   });
-
   function previousMonth() {
-    let firstDayNextMonth = add(firstDayCurrentMonth, { months: -1 });
+    const firstDayNextMonth = add(firstDayCurrentMonth, { months: -1 });
     setCurrentMonth(format(firstDayNextMonth, "MMM-yyyy"));
   }
   function nextMonth() {
-    let firstDayNextMonth = add(firstDayCurrentMonth, { months: 1 });
+    const firstDayNextMonth = add(firstDayCurrentMonth, { months: 1 });
     setCurrentMonth(format(firstDayNextMonth, "MMM-yyyy"));
   }
-
-  /* 
-  let selectedDayMeetings = meetings.filter((meeting) =>
-    isSameDay(parseISO(meeting.startDatetime), selectedDay)
-  ); */
-
-  function bookDay(day) {
-    const same_day_booking = bookings.filter(
-      (booking) =>
+  function searchBookings(day) {
+    const same_day_booking = bookings.filter((booking) => {
+      return (
         isSameDay(day, booking.booking_date) &&
         isSameMonth(day, booking.booking_date) &&
-        isSameYear(day, booking.booking_date),
-    );
+        isSameYear(day, booking.booking_date)
+      );
+    });
     if (same_day_booking.length >= 0 && same_day_booking.length < 2) {
+      setSelectedDay(day);
+      setBookingDay(same_day_booking);
       setOpen(true);
-      setSelectedDay(same_day_booking);
     }
-    /* bookings.push({
-      id: bookings.length.toString(),
-      booking_date: day,
-      booking_time: Date.now(),
-      flat: '5',
-      shift: 'EVENING',
-      floor: 1,
-    }); */
   }
-
   return (
-    <div className="md:pt-16 flex flex-row justify-center">
-      <div className="p-3 md:p-5 w-80 md:w-1/3 bg-gray-100 rounded-lg shadow-lg shadow-white">
-        <div className="flex items-center">
-          <h2 className="flex-auto font-semibold text-gray-900 ">
-            {format(firstDayCurrentMonth, "MMMM yyyy")}
-          </h2>
+    <div>
+      <div className="flex flex-col md:mx-auto md:w-1/2  text-center px-2 my-2">
+        <h2 className="text-4xl px-2 text-white">Reservas de turnos</h2>
+        <h3 className="text-2xl px-2 text-white">Seleccione la fecha</h3>
+      </div>
+      <div className="p-3 md:p-5 md:w-1/3 mx-auto w-11/12  mt-10  bg-gray-100 rounded-lg shadow-lg shadow-white">
+        <div className="flex items-center text-center">
           <button
             type="button"
             onClick={previousMonth}
             className="-my-1.5 flex flex-none items-center justify-center p-1.5 text-gray-400"
           >
-            <span className="sr-only text-red-600">Previous month</span>
-            <ChevronLeftIcon className="w-5 h-5" aria-hidden="true" />
+            <ChevronLeftIcon className="w-8 h-8" aria-hidden="true" />
           </button>
+          <h2 className="flex-auto font-semibold text-2xl text-gray-900 ">
+            {format(firstDayCurrentMonth, "MMMM yyyy")}
+          </h2>
+
           <button
             onClick={nextMonth}
             type="button"
             className="-my-1.5 -mr-1.5 ml-2 flex flex-none items-center justify-center p-1.5 text-gray-400 hover:text-gray-500"
           >
-            <span className="sr-only">Next month</span>
-            <ChevronRightIcon className="w-5 h-5" aria-hidden="true" />
+            <ChevronRightIcon className="w-8 h-8" aria-hidden="true" />
           </button>
         </div>
         <div className="grid grid-cols-7 mt-10 text-xs leading-6 text-center text-green-700">
@@ -121,30 +131,24 @@ export default function Calendar() {
                       isSameDay(day, booking.booking_date) &&
                       isSameMonth(day, booking.booking_date) &&
                       isSameYear(day, booking.booking_date),
-                  ).length >= 2
+                  ).length >= 2 || isPass(day)
                 }
                 type="button"
                 onClick={() => {
-                  bookDay(day);
+                  searchBookings(day);
                 }}
                 className={classNames(
-                  "disabled:text-gray-400 disabled:cursor-not-allowed",
-                  isEqual(day, selectedDay) && "text-white",
-                  !isEqual(day, selectedDay) && isToday(day) && "text-red-500",
-                  !isEqual(day, selectedDay) &&
-                    !isToday(day) &&
-                    isSameMonth(day, firstDayCurrentMonth) &&
-                    "text-gray-900",
-                  !isEqual(day, selectedDay) &&
-                    !isToday(day) &&
-                    !isSameMonth(day, firstDayCurrentMonth) &&
-                    "text-gray-400",
-                  isEqual(day, selectedDay) && isToday(day) && "bg-red-500",
-                  isEqual(day, selectedDay) && !isToday(day) && "bg-gray-900",
+                  !isPass(day) &&
+                    "disabled:text-red-700 disabled:cursor-not-allowed",
+                  "text-gray-900",
+                  isToday(day) && "text-white",
+                  !isToday(day) && "text-gray-900",
+                  isToday(day) && "bg-red-500",
+                  !isToday(day) && "bg-gray-100",
                   "enabled:hover:bg-gray-200",
-                  (isEqual(day, selectedDay) || isToday(day)) &&
-                    "font-semibold",
+                  isToday(day) && "font-semibold",
                   "mx-auto flex h-8 w-8 items-center justify-center rounded-full",
+                  isPass(day) && "disabled:text-gray-400",
                 )}
               >
                 <time dateTime={format(day, "yyyy-MM-dd")}>
@@ -155,7 +159,14 @@ export default function Calendar() {
           ))}
         </div>
       </div>
-      <ModalShift open={open} setOpen={setOpen} bookings={selectedDay} />
+      <ModalShift
+        updateRefresh={updateRefresh}
+        open={open}
+        setOpen={setOpen}
+        bookings={bookingDay}
+        day={selectedDay}
+        user={user}
+      />
     </div>
   );
 }

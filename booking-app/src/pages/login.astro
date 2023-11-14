@@ -1,0 +1,126 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+import { auth } from "../lib/lucia";
+import { LuciaError } from "lucia";
+
+//Validate user
+const session = await Astro.locals.auth.validate();
+if (session) return Astro.redirect("/", 302);
+
+let errorMessage: string | null = null;
+
+// check for form submissions
+if (Astro.request.method === "POST") {
+  const formData = await Astro.request.formData();
+  const username = formData.get("username");
+  const password = formData.get("password");
+  // basic check
+  const validUsername = typeof username === "string" && username.length >= 4;
+  const validPassword = typeof password === "string" && password.length === 4;
+  if (validUsername && validPassword) {
+    try {
+      const key = await auth.useKey(
+        "username",
+        username.toLowerCase(),
+        password,
+      );
+      const session = await auth.createSession({
+        userId: key.userId,
+        attributes: {},
+      });
+      Astro.locals.auth.setSession(session); // set session cookie
+      return Astro.redirect("/", 302); // redirect to profile page
+    } catch (e) {
+      if (
+        e instanceof LuciaError &&
+        (e.message === "AUTH_INVALID_KEY_ID" ||
+          e.message === "AUTH_INVALID_PASSWORD")
+      ) {
+        // user does not exist
+        // or invalid password
+        errorMessage = "Credenciales incorrectas";
+      } else {
+        errorMessage = "An unknown error occurred";
+      }
+    }
+  } else {
+    errorMessage = "Credenciales incorrectas";
+  }
+}
+---
+
+<Layout title="Login">
+  <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+    <div class="sm:mx-auto sm:w-full sm:max-w-sm">
+      <h2
+        class="mt-10 text-center text-3xl leading-9 tracking-tight text-white"
+      >
+        Iniciar Sesion
+      </h2>
+    </div>
+
+    <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+      <form method="POST" class="space-y-6">
+        <div>
+          <label
+            for="user"
+            class="block text-sm font-medium leading-6 text-white">User</label
+          >
+          <div class="mt-2">
+            <input
+              id="user"
+              name="username"
+              type="text"
+              autocomplete="username"
+              required
+              class="block w-full rounded-md border-0 py-1.5 text-black shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6"
+            />
+          </div>
+        </div>
+
+        <div>
+          <div class="flex items-center justify-between">
+            <label
+              for="password"
+              class="block text-sm font-medium leading-6 text-white"
+              >Password</label
+            >
+            <!-- <div class="text-sm">
+              <a
+                href="#"
+                class="font-semibold text-indigo-600 hover:text-indigo-500"
+                >Forgot password?</a
+              >
+            </div> -->
+          </div>
+          <div class="mt-2">
+            <input
+              id="password"
+              name="password"
+              type="password"
+              autocomplete="current-password"
+              required
+              class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6"
+            />
+          </div>
+          {
+            errorMessage && (
+              <span id="error" class="text-red-900 text-sm">
+                Credenciales incorrectas
+              </span>
+            )
+          }
+        </div>
+
+        <div>
+          <button
+            type="submit"
+            class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            >Ingresar</button
+          >
+        </div>
+      </form>
+    </div>
+  </div>
+</Layout>

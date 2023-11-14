@@ -1,19 +1,18 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import Card from '../components/Booking.astro.jsx';
-import  Calendar  from '../components/Calendar.jsx';
-import NavButtons from '../components/NavButtons.astro';
-import BookingContainer from '../components/BookingContainer.astro';
+import Layout from "../layouts/Layout.astro";
+import Calendar from "../components/Calendar.jsx";
+import NavButtons from "../components/NavButtons.astro";
+
+const session = await Astro.locals.auth.validate();
+if (!session) return Astro.redirect("/login", 302);
+const user = session?.user;
 ---
 
-<Layout title="Welcome to Astro.">
-	<main>
-		<BookingContainer/>
-		<Calendar client:load/>
+<Layout title="3 de febrero 1101">
+  <main>
+    <NavButtons />
+    <Calendar {user} client:only />
+  </main>
 
-	</main>	
+  <style></style>
 </Layout>
-
-<style>
-
-</style>

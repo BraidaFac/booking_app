@@ -1,0 +1,107 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { auth } from "../lib/lucia";
+import { LuciaError } from "lucia";
+
+const session = await Astro.locals.auth.validate();
+const user = session?.user;
+if (user?.role !== "ADMIN") return Astro.redirect("/", 302);
+
+let errorMessage: string | null = null;
+// check for form submissions
+if (Astro.request.method === "POST") {
+  const formData = await Astro.request.formData();
+  const username = formData.get("username");
+  const flat = formData.get("flat")?.toString();
+  const floor = formData.get("floor")?.toString();
+  const password = formData.get("password");
+  console.log(username, flat, floor, password);
+  // basic check
+  const validUsername =
+    typeof username === "string" &&
+    username.length >= 4 &&
+    username.length <= 5;
+  const validPassword = typeof password === "string" && password.length === 4;
+
+  if (validUsername && validPassword && flat && floor) {
+    try {
+      console.log("creating user");
+      const user = await auth.createUser({
+        key: {
+          providerId: "username", // auth method
+          providerUserId: username.toLowerCase(), // unique id when using "username" auth method
+          password, // hashed by Lucia
+        },
+        attributes: {
+          username,
+          flat,
+          floor,
+          role: "USER",
+        },
+      });
+      console.log(user);
+      const session = await auth.createSession({
+        userId: user.userId,
+        attributes: {},
+      });
+      return Astro.redirect("/", 302); // redirect to profile page
+    } catch (error) {
+      console.log(error);
+      if (error instanceof LuciaError) {
+        if (error.message.match("USER_TABLE_UNIQUE_CONSTRAINT_ERROR")) {
+          errorMessage = "Username already taken";
+        } else {
+          errorMessage = "An unknown error occurred";
+        }
+      }
+    }
+  } else {
+    errorMessage = "Invalid input";
+  }
+}
+---
+
+<Layout title="signup">
+  <div class="flex flex-col items-center w-full">
+    <h1 class="text-4xl mb-5">Crear cuenta</h1>
+    <form method="POST" class="form-control gap-1 w-1/2 items-center">
+      <label class="label relative right-28 w-24">
+        <span class="label-text text-white">Usuario</span>
+      </label>
+      <input
+        type="text"
+        placeholder="Usuario"
+        name="username"
+        class="input input-bordered input-accent input-sm w-full max-w-xs"
+      />
+      <label class="label relative right-28 w-24">
+        <span class="label-text text-white">Piso</span>
+      </label>
+      <input
+        type="text"
+        name="floor"
+        placeholder="Piso"
+        class="input input-bordered input-accent input-sm w-full max-w-xs"
+      />
+      <label class="label relative right-28 w-24">
+        <span class="label-text text-white">Departamento</span>
+      </label>
+      <input
+        type="text"
+        placeholder="Departamento "
+        name="flat"
+        class="input input-bordered input-accent input-sm w-full max-w-xs"
+      />
+      <label class="label relative right-28 w-24">
+        <span class="label-text text-white">Contrasena</span>
+      </label>
+      <input
+        type="text"
+        name="password"
+        placeholder="Contrasena"
+        class="input input-bordered input-accent input-sm w-full max-w-xs"
+      />
+      <button type="submit" class="btn btn-accent btn-sm w-32">Crear</button>
+    </form>
+  </div>
+</Layout>

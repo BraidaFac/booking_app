@@ -1,15 +1,43 @@
 import { Fragment, useRef, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-
+import { createBooking } from "../lib/bookings.controller";
+import { formatDate } from "../utils/date_formatter";
 export default function ModalShift(props) {
   const cancelButtonRef = useRef(null);
-  const bookings = props.bookings;
-  let morning = null;
-  let evening = null;
+  const { bookings, day, user, setOpen, updateRefresh } = props;
+  let morning;
+  let evening;
   if (bookings) {
     morning = bookings.find((booking) => booking.shift === "MORNING");
     evening = bookings.find((booking) => booking.shift === "EVENING");
   }
+
+  function bookShift(shift) {
+    const booking = {
+      user_id: user.userId,
+      booking_date: day,
+      shift: shift,
+    };
+    fetch("http://localhost:4321/api/booking", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(booking),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status === 201) {
+          updateRefresh();
+          alert("Turno reservado");
+          setOpen(false);
+        }
+      })
+      .catch((error) => {
+        alert("Error al reservar turno");
+      });
+  }
+
   return (
     <Transition.Root show={props.open} as={Fragment}>
       <Dialog
@@ -31,7 +59,7 @@ export default function ModalShift(props) {
         </Transition.Child>
 
         <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
-          <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+          <div className="flex min-h-full items-center justify-center p-4 text-center  sm:p-0">
             <Transition.Child
               as={Fragment}
               enter="ease-out duration-300"
@@ -42,12 +70,17 @@ export default function ModalShift(props) {
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
               <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm">
-                <div className="bg-gray-50 px-4 py-4 h-36 sm:flex sm:flex-col  sm:justify-around sm:px-6">
+                <div className="bg-gray-50 px-4 py-4 pt-1 h-36 flex flex-col justify-around sm:px-6 w-80 sm:w-full">
+                  <div className="text-center justify-items-start">
+                    <p className="text-sm md:text-lg font-semibold">
+                      {day && formatDate(day)}
+                    </p>
+                  </div>
                   <button
                     type="button"
                     disabled={morning}
-                    className="inline-flex w-full justify-center rounded-md bg-green-700 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-600  sm:w-auto disabled:bg-slate-300"
-                    onClick={() => setOpen(false)}
+                    className="inline-flex w-full justify-center rounded-md bg-green-700  px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-600  sm:w-auto disabled:bg-slate-300"
+                    onClick={() => bookShift("MORNING")}
                   >
                     Mediodia
                   </button>
@@ -55,7 +88,7 @@ export default function ModalShift(props) {
                     type="button"
                     disabled={evening}
                     className="inline-flex w-full justify-center rounded-md bg-red-700 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-600  sm:w-auto disabled:bg-slate-300"
-                    onClick={() => setOpen(false)}
+                    onClick={() => bookShift("EVENING")}
                     ref={cancelButtonRef}
                   >
                     Noche

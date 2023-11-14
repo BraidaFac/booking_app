@@ -1,13 +1,39 @@
-<div class="mt-4 mb-10 nav-buttons flex flex-row items-center justify-center">
-  <div class="bg-white w-64 flex flex-row justify-center rounded-full border-2">
-    <a
-      href="/"
-      class="py-2 px-3 w-1/2 text-2xl border-2 rounded-full text-green-800"
+---
+import UserBox from "./UserBox.jsx";
+const path = Astro.url.pathname;
+const session = await Astro.locals.auth.validate();
+if (!session) return Astro.redirect("/login", 302);
+const user = session?.user;
+---
+
+<div class="flex flex-col">
+  <UserBox user={user} client:only />
+  <div
+    class="mb-2 self-center nav-buttons flex flex-row items-center justify-center"
+  >
+    <div
+      class="bg-white w-56 flex flex-row justify-center rounded-full border-2 text-center"
     >
-      Calendar
-    </a>
-    <a href="/booking" class="px-3 py-2 w-1/2 text-2xl text-green-800">
-      Booking
-    </a>
+      <a
+        href="/"
+        class:list={[
+          "py-1 px-2 text-2xl rounded-full text-green-800  ",
+          { "border-2": path === "/" },
+        ]}
+      >
+        Calendar
+      </a>
+      <a
+        href="/booking"
+        class:list={[
+          "py-1 px-2 w-28 text-2xl rounded-full text-green-800 size  ",
+          { "border-2": path === "/booking" },
+        ]}
+      >
+        Booking
+      </a>
+    </div>
   </div>
 </div>
+
+<script></script>

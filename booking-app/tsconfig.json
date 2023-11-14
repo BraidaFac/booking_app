@@ -6,8 +6,5 @@
     "experimentalDecorators": true, // the key line
     "emitDecoratorMetadata": true,
     "esModuleInterop": true
-  },
-  "ts-node": {
-    "esm": true /* ... Line to be added ... */
   }
 }

@@ -15,6 +15,7 @@
     "@astro-auth/providers": "^1.0.6",
     "@astrojs/react": "^3.0.3",
     "@astrojs/tailwind": "^5.0.2",
+    "@astrojs/vercel": "^5.2.0",
     "@headlessui/react": "^1.7.17",
     "@heroicons/react": "^2.0.18",
     "@lucia-auth/adapter-mongoose": "^3.0.1",

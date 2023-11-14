@@ -1,7 +1,7 @@
 export default function UserBox(props) {
   const user = props.user;
   return (
-    <details className="dropdown dropdown-left md:dropdown-end self-end">
+    <details className="dropdown dropdown-left  self-end">
       <summary className="list-none">
         <div className="avatar placeholder mr-3 mt-3">
           <div
@@ -16,7 +16,7 @@ export default function UserBox(props) {
       </summary>
       <ul
         tabIndex={0}
-        className="dropdown-content z-[1] menu mt-4 md:mt-0 p-0 shadow bg-neutral rounded-box w-28"
+        className="dropdown-content z-[1] menu mt-4  p-0 shadow bg-neutral rounded-box w-28"
       >
         <li>
           <a

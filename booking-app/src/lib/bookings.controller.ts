@@ -1,3 +1,4 @@
+import type { User } from "@prisma/client";
 import { prisma } from "./prisma";
 
 export async function getBookings() {
@@ -8,6 +9,15 @@ export async function getBookings() {
       booking_date: {
         gte: date,
       },
+    },
+    include: { user: true },
+  });
+}
+
+export async function getBookingsById(id: string) {
+  return await prisma.booking.findUnique({
+    where: {
+      id: id,
     },
     include: { user: true },
   });
@@ -43,7 +53,7 @@ export async function createBooking(booking: {
     return { status: 500, error: error };
   }
 }
-export async function deleteBooking(booking_id: string) {
+export async function deleteBooking(booking_id: string | undefined) {
   try {
     await prisma.booking.delete({
       where: {
@@ -75,4 +85,22 @@ async function sanitizaceInput(input: {
     throw Error("Invalid user");
   }
   return input;
+}
+
+export async function validateDeleteBooking(
+  user_id: string,
+  booking_id?: string,
+) {
+  if (!booking_id) {
+    return { status: 400 };
+  }
+  const booking = await getBookingsById(booking_id);
+  if (!booking) {
+    return { status: 404 };
+  }
+  if (booking.user_id !== user_id) {
+    return {
+      status: 403,
+    };
+  }
 }

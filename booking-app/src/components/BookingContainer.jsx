@@ -4,10 +4,11 @@ import Booking from "./Booking.jsx";
 
 export default function BookingContainer(props) {
   const [bookings, setBookings] = useState([]);
+  const [loading, setLoading] = useState(false);
   const user = props.user;
 
-
   useEffect(() => {
+    setLoading(true);
     fetch("/api/booking", { method: "GET" })
       .then((response) => response.json())
       .then((data) => {
@@ -23,6 +24,7 @@ export default function BookingContainer(props) {
           }),
         );
       })
+      .finally(() => setLoading(false))
       .catch((error) => console.log(error));
   }, []);
   const onDelete = async (id) => {
@@ -36,18 +38,20 @@ export default function BookingContainer(props) {
     }
   };
   return (
-    <div className="flex flex-col gap-4 mt-8">
-      {bookings.length === 0 ? (
+    <div className="flex flex-col items-center gap-4 mt-8">
+      {!loading && bookings.length === 0 ? (
         <p className="text-white text-center">No existen reservas</p>
-      ) : (
+      ) : !loading ? (
         bookings.map((booking) => (
           <Booking
             key={booking.id}
-            btnDisabled={booking.user_id !== user.id}
+            btnDisabled={booking.user_id !== user.userId}
             {...booking}
             onDelete={onDelete}
           />
         ))
+      ) : (
+        <span className="loading loading-spinner text-warning loading-lg"></span>
       )}
     </div>
   );

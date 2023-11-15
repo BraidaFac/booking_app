@@ -7,7 +7,7 @@ const user = session?.user;
 ---
 
 <div class="flex flex-col">
-  <UserBox user={user} client:only />
+  <UserBox user={user} client:only="react" />
   <div
     class="mb-2 self-center nav-buttons flex flex-row items-center justify-center"
   >

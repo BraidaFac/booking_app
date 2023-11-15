@@ -1,7 +1,6 @@
-import { Fragment, useRef, useState } from "react";
+import { Fragment, useRef } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { createBooking } from "../lib/bookings.controller";
-import { formatDate } from "../utils/date_formatter";
+import { formatDate } from "../utils/date_formatter.ts";
 export default function ModalShift(props) {
   const cancelButtonRef = useRef(null);
   const { bookings, day, user, setOpen, updateRefresh } = props;

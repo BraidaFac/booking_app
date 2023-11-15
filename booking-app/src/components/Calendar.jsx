@@ -1,4 +1,7 @@
-import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
+import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
+} from "@heroicons/react/24/solid/index.js";
 import ModalShift from "./ModalShift.jsx";
 import {
   add,
@@ -14,7 +17,7 @@ import {
   startOfToday,
   isSameYear,
 } from "date-fns/index.js";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { isBefore } from "date-fns/fp/index.js";
 
 function classNames(...classes) {

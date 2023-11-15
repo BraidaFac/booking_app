@@ -17,7 +17,7 @@ export default function ModalShift(props) {
       booking_date: day,
       shift: shift,
     };
-    fetch("http://localhost:4321/api/booking", {
+    fetch("/api/booking", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

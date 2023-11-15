@@ -1,10 +1,5 @@
 import type { APIRoute } from "astro";
-import {
-  createBooking,
-  getBookings,
-  getBookingsByUserId,
-} from "../../../lib/bookings.controller";
-import { getUser } from "@astro-auth/core";
+import { getBookingsByUserId } from "../../../lib/bookings.controller";
 
 export const GET: APIRoute = async ({ locals, params }) => {
   const session = await locals.auth.validate();

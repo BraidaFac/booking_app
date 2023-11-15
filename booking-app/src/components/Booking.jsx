@@ -5,6 +5,7 @@ function classNames(...classes) {
 } /*  */
 export default function Booking(props) {
   const { id, booking_date, shift, floor, flat, btnDisabled } = props;
+  console.log(btnDisabled);
   const onDelete = props.onDelete;
   return (
     <div className="booking px-4 py-2 mx-auto md:w-6/12 md:mx-auto mdrounded-md md:py-3 md:px-10 bg-white flex flex-col w-11/12 rounded-xl">

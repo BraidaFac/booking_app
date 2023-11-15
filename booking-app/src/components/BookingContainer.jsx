@@ -6,6 +6,7 @@ export default function BookingContainer(props) {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(false);
   const user = props.user;
+  console.log(user);
 
   useEffect(() => {
     setLoading(true);
@@ -20,6 +21,7 @@ export default function BookingContainer(props) {
               floor: booking.user.floor,
               flat: booking.user.flat,
               booking_date: parseISO(booking.booking_date),
+              user_id: booking.user.id,
             };
           }),
         );
@@ -27,6 +29,7 @@ export default function BookingContainer(props) {
       .finally(() => setLoading(false))
       .catch((error) => console.log(error));
   }, []);
+  console.log(bookings);
   const onDelete = async (id) => {
     const res = await fetch(`/api/booking/${id}`, {
       method: "DELETE",

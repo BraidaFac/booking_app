@@ -30,6 +30,7 @@ function MyBookingContainer(props, ref) {
               floor: booking.user.floor,
               flat: booking.user.flat,
               booking_date: parseISO(booking.booking_date),
+              user_id: booking.user.id,
             };
           }),
         );

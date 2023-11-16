@@ -7,6 +7,8 @@ import toast from "react-hot-toast";
 function MyBookingContainer(props, ref) {
   const [bookings, setBookings] = useState([]);
   const [refresh, setRefresh] = useState(false);
+  const [loading, setLoading] = useState(false);
+
   const user = props.user;
 
   useImperativeHandle(ref, () => ({
@@ -16,6 +18,7 @@ function MyBookingContainer(props, ref) {
     setRefresh((prevRefresh) => !prevRefresh);
   }
   useEffect(() => {
+    setLoading(true);
     fetch(`http://localhost:4321/api/user/${user.userId}`, { method: "GET" })
       .then((response) => response.json())
       .then((data) => {
@@ -31,6 +34,7 @@ function MyBookingContainer(props, ref) {
           }),
         );
       })
+      .finally(() => setLoading(false))
       .catch((error) => console.log(error));
   }, [refresh]);
 
@@ -50,7 +54,7 @@ function MyBookingContainer(props, ref) {
       <h2 className="text-4xl text-white text-center">Mis reservas</h2>
 
       {bookings.length === 0 ? (
-        <p className="text-white text-center">No tenes reservas</p>
+        <p className="text-white text-center">No existen reservas</p>
       ) : (
         bookings.map((booking) => (
           <Booking

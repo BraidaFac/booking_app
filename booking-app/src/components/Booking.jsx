@@ -8,7 +8,7 @@ export default function Booking(props) {
   const { id, booking_date, shift, floor, flat, btnDisabled } = props;
   const onDelete = props.onDelete;
   return (
-    <div className="booking px-4 py-2  mx-auto md:w-6/12 md:mx-auto  md:py-3 md:px-10 bg-secondary flex flex-col w-11/12 rounded-xl justify-center">
+    <div className="booking px-4 py-2  mx-auto md:w-6/12 md:mx-auto  md:py-3 md:px-10  bg-amber-50 flex flex-col w-11/12 rounded-xl justify-center">
       <h2 className="text-2xl md:text-3xl">
         {formatDate(Number(booking_date))}
       </h2>

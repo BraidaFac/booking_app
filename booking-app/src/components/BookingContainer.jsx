@@ -44,9 +44,9 @@ function BookingContainer(props, ref) {
     });
     if (res.status === 204) {
       props.updateRefresh();
-      toast.success("Reserva cancelada");
+      toast.success("Reserva cancelada", { duration: 1000 });
     } else {
-      toast.error("No se pudo cancelar la reserva");
+      toast.error("No se pudo cancelar la reserva", { duration: 1000 });
     }
   };
   return (

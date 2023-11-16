@@ -40,7 +40,7 @@ function MyBookingContainer(props, ref) {
   }, [refresh]);
 
   const onDelete = async (id) => {
-    const res = await fetch(`http://localhost:4321/api/booking/${id}`, {
+    const res = await fetch(`api/booking/${id}`, {
       method: "DELETE",
     });
     if (res.status === 204) {

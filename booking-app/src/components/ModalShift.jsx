@@ -1,6 +1,7 @@
 import { Fragment, useRef } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { formatDate } from "../utils/date_formatter.ts";
+import toast from "react-hot-toast";
 export default function ModalShift(props) {
   const cancelButtonRef = useRef(null);
   const { bookings, day, user, setOpen, updateRefresh } = props;
@@ -28,12 +29,12 @@ export default function ModalShift(props) {
       .then((data) => {
         if (data.status === 201) {
           updateRefresh();
-          alert("Turno reservado");
+          toast.success("Reserva exitosa");
           setOpen(false);
         }
       })
       .catch((error) => {
-        alert("Error al reservar turno");
+        toast.error("Error al reservar turno");
       });
   }
 

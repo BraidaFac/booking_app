@@ -1,9 +1,6 @@
 ---
-import { getUser } from "@astro-auth/core";
 import NavButtons from "../components/NavButtons.astro";
 import Layout from "../layouts/Layout.astro";
-import { getBookings } from "../lib/bookings.controller";
-import BookingContainer from "../components/BookingContainer.jsx";
 
 const session = await Astro.locals.auth.validate();
 if (!session) return Astro.redirect("/login", 302);
@@ -13,6 +10,5 @@ const user = session?.user;
 <Layout title="Reservas">
   <main>
     <NavButtons />
-    <BookingContainer {user} client:only="react" />
   </main>
 </Layout>

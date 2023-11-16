@@ -1,12 +1,12 @@
 export default function UserBox(props) {
   const user = props.user;
   return (
-    <details className="dropdown dropdown-left  self-end">
+    <details className="dropdown dropdown-left absolute  ">
       <summary className="list-none">
         <div className="avatar placeholder mr-3 mt-3">
           <div
             tabIndex={0}
-            className="btn bg-neutral text-neutral-content rounded-full w-12"
+            className="btn bg-neutral border-pink-200 text-neutral-content rounded-full w-12 hover:text-black"
           >
             <span>
               {user.floor}/{user.flat}

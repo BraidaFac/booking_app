@@ -3,6 +3,11 @@ import {
   ChevronRightIcon,
 } from "@heroicons/react/24/solid/index.js";
 import ModalShift from "./ModalShift.jsx";
+import MyBookingContainer from "./MyBookingContainer.jsx";
+import BookingContainer from "./BookingContainer.jsx";
+import UserBox from "./UserBox.jsx";
+import { Toaster } from "react-hot-toast";
+
 import {
   add,
   eachDayOfInterval,
@@ -17,7 +22,7 @@ import {
   startOfToday,
   isSameYear,
 } from "date-fns/index.js";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { isBefore } from "date-fns/fp/index.js";
 
 function classNames(...classes) {
@@ -29,6 +34,9 @@ function isPass(day) {
 }
 
 export default function Calendar(props) {
+  const myBookingContainerRef = useRef(null);
+  const bookingContainerRef = useRef(null);
+
   const [open, setOpen] = useState(false);
   const [refresh, setRefresh] = useState(false);
   const [bookings, setBookings] = useState([]);
@@ -48,11 +56,18 @@ export default function Calendar(props) {
             return { ...booking, booking_date: parseISO(booking.booking_date) };
           }),
         );
+        containersRefresh();
       })
       .catch((error) => console.log(error));
   }, [refresh]);
+
   const updateRefresh = () => {
     setRefresh((prevRefresh) => !prevRefresh);
+  };
+
+  const containersRefresh = () => {
+    bookingContainerRef.current.updateRefresh();
+    myBookingContainerRef.current.updateRefresh();
   };
 
   const days = eachDayOfInterval({
@@ -83,11 +98,13 @@ export default function Calendar(props) {
   }
   return (
     <div>
+      <Toaster />
+
       <div className="flex flex-col md:mx-auto md:w-1/2  text-center px-2 my-2">
         <h2 className="text-4xl px-2 text-white">Reservas de turnos</h2>
         <h3 className="text-2xl px-2 text-white">Seleccione la fecha</h3>
       </div>
-      <div className="p-3 md:p-5 md:w-1/3 mx-auto w-11/12  mt-10  bg-gray-100 rounded-lg shadow-lg shadow-white">
+      <div className="p-3 md:p-5 md:w-1/3 mx-auto w-11/12  mt-10  bg-amber-50 rounded-lg shadow-lg shadow-white">
         <div className="flex items-center text-center">
           <button
             type="button"
@@ -108,7 +125,7 @@ export default function Calendar(props) {
             <ChevronRightIcon className="w-8 h-8" aria-hidden="true" />
           </button>
         </div>
-        <div className="grid grid-cols-7 mt-10 text-xs leading-6 text-center text-green-700">
+        <div className="grid grid-cols-7 mt-10 text-xs leading-6 text-center text-primary">
           <div>D</div>
           <div>L</div>
           <div>M</div>
@@ -141,12 +158,12 @@ export default function Calendar(props) {
                 }}
                 className={classNames(
                   !isPass(day) &&
-                    "disabled:text-red-700 disabled:cursor-not-allowed",
+                    "disabled:text-red-400 disabled:cursor-not-allowed",
                   "text-gray-900",
                   isToday(day) && "text-white",
                   !isToday(day) && "text-gray-900",
-                  isToday(day) && "bg-red-500",
-                  !isToday(day) && "bg-gray-100",
+                  isToday(day) && "bg-primary",
+                  !isToday(day) && "bg-booking-card",
                   "enabled:hover:bg-gray-200",
                   isToday(day) && "font-semibold",
                   "mx-auto flex h-8 w-8 items-center justify-center rounded-full",
@@ -168,6 +185,16 @@ export default function Calendar(props) {
         bookings={bookingDay}
         day={selectedDay}
         user={user}
+      />
+      <MyBookingContainer
+        user={user}
+        ref={myBookingContainerRef}
+        updateRefresh={updateRefresh}
+      />
+      <BookingContainer
+        user={user}
+        ref={bookingContainerRef}
+        updateRefresh={updateRefresh}
       />
     </div>
   );

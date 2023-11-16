@@ -1,12 +1,15 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useImperativeHandle } from "react";
 import { parseISO } from "date-fns";
 import Booking from "./Booking.jsx";
+import React from "react";
+import toast from "react-hot-toast";
 
-export default function BookingContainer(props) {
+function BookingContainer(props, ref) {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [refresh, setRefresh] = useState(false);
+
   const user = props.user;
-  console.log(user);
 
   useEffect(() => {
     setLoading(true);
@@ -28,20 +31,28 @@ export default function BookingContainer(props) {
       })
       .finally(() => setLoading(false))
       .catch((error) => console.log(error));
-  }, []);
-  console.log(bookings);
+  }, [refresh]);
+  useImperativeHandle(ref, () => ({
+    updateRefresh,
+  }));
+  function updateRefresh() {
+    setRefresh((prevRefresh) => !prevRefresh);
+  }
   const onDelete = async (id) => {
     const res = await fetch(`/api/booking/${id}`, {
       method: "DELETE",
     });
     if (res.status === 204) {
-      setBookings(bookings.filter((booking) => booking.id !== id));
+      props.updateRefresh();
+      toast.success("Reserva cancelada");
     } else {
-      alert("No se pudo cancelar la reserva");
+      toast.error("No se pudo cancelar la reserva");
     }
   };
   return (
-    <div className="flex flex-col items-center gap-4 mt-8">
+    <div className="flex flex-col items-center gap-4 my-8">
+      <h2 className=" text-4xl text-white text-center">Otras reservas</h2>
+
       {!loading && bookings.length === 0 ? (
         <p className="text-white text-center">No existen reservas</p>
       ) : !loading ? (
@@ -59,3 +70,4 @@ export default function BookingContainer(props) {
     </div>
   );
 }
+export default React.forwardRef(BookingContainer);

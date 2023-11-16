@@ -1,12 +1,17 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useImperativeHandle } from "react";
 import { parseISO } from "date-fns";
 import Booking from "./Booking.jsx";
+import React from "react";
+import toast from "react-hot-toast";
 
-export default function MyBookingContainer(props) {
+function MyBookingContainer(props, ref) {
   const [bookings, setBookings] = useState([]);
   const [refresh, setRefresh] = useState(false);
   const user = props.user;
 
+  useImperativeHandle(ref, () => ({
+    updateRefresh,
+  }));
   function updateRefresh() {
     setRefresh((prevRefresh) => !prevRefresh);
   }
@@ -34,13 +39,14 @@ export default function MyBookingContainer(props) {
       method: "DELETE",
     });
     if (res.status === 204) {
-      setBookings(bookings.filter((booking) => booking.id !== id));
+      toast.success("Reserva cancelada");
+      props.updateRefresh();
     } else {
-      alert("No se pudo cancelar la reserva");
+      toast.error("No se pudo cancelar la reserva");
     }
   };
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 mt-5">
       <h2 className="text-4xl text-white text-center">Mis reservas</h2>
 
       {bookings.length === 0 ? (
@@ -58,3 +64,4 @@ export default function MyBookingContainer(props) {
     </div>
   );
 }
+export default React.forwardRef(MyBookingContainer);

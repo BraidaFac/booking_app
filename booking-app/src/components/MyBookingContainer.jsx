@@ -44,10 +44,10 @@ function MyBookingContainer(props, ref) {
       method: "DELETE",
     });
     if (res.status === 204) {
-      toast.success("Reserva cancelada");
+      toast.success("Reserva cancelada", { duration: 1000 });
       props.updateRefresh();
     } else {
-      toast.error("No se pudo cancelar la reserva");
+      toast.error("No se pudo cancelar la reserva", { duration: 1000 });
     }
   };
   return (

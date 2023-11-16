@@ -52,7 +52,7 @@ function MyBookingContainer(props, ref) {
   };
   return (
     <div className="flex flex-col items-center gap-4 my-8">
-      <h2 className=" text-4xl text-white text-center">Otras reservas</h2>
+      <h2 className=" text-4xl text-white text-center">Mis reservas</h2>
 
       {!loading && bookings.length === 0 ? (
         <p className="text-white text-center">No tienes reservas</p>

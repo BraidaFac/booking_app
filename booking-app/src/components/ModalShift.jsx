@@ -29,7 +29,7 @@ export default function ModalShift(props) {
       .then((data) => {
         if (data.status === 201) {
           updateRefresh();
-          toast.success("Reserva exitosa");
+          toast.success("Reserva exitosa", { duration: 1000 });
           setOpen(false);
         }
       })
@@ -79,7 +79,7 @@ export default function ModalShift(props) {
                   <button
                     type="button"
                     disabled={morning}
-                    className="inline-flex w-full justify-center rounded-md bg-green-700  px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-600  sm:w-auto disabled:bg-slate-300"
+                    className="inline-flex w-full justify-center rounded-md bg-primary  px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-800  sm:w-auto disabled:bg-slate-300"
                     onClick={() => bookShift("MORNING")}
                   >
                     Mediodia
@@ -87,7 +87,8 @@ export default function ModalShift(props) {
                   <button
                     type="button"
                     disabled={evening}
-                    className="inline-flex w-full justify-center rounded-md bg-red-700 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-600  sm:w-auto disabled:bg-slate-300"
+                    className="inline-flex w-full justify-center rounded-md bg-primary px-3 py-2 text-sm font-semibold text-white shadow-sm   sm:w-auto 
+                    hover:bg-green-800  disabled:bg-slate-300"
                     onClick={() => bookShift("EVENING")}
                     ref={cancelButtonRef}
                   >

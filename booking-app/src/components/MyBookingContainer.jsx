@@ -19,7 +19,7 @@ function MyBookingContainer(props, ref) {
   }
   useEffect(() => {
     setLoading(true);
-    fetch(`http://localhost:4321/api/user/${user.userId}`, { method: "GET" })
+    fetch(`/api/user/${user.userId}`, { method: "GET" })
       .then((response) => response.json())
       .then((data) => {
         setBookings(
@@ -54,7 +54,7 @@ function MyBookingContainer(props, ref) {
       <h2 className="text-4xl text-white text-center">Mis reservas</h2>
 
       {bookings.length === 0 ? (
-        <p className="text-white text-center">No existen reservas</p>
+        <p className="text-white text-center">No tienes reservas</p>
       ) : (
         bookings.map((booking) => (
           <Booking

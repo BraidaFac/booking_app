@@ -1,7 +1,7 @@
 export default function UserBox(props) {
   const user = props.user;
   return (
-    <details className="dropdown dropdown-left absolute  ">
+    <details className="dropdown dropdown-left absolute right-2 top-10">
       <summary className="list-none">
         <div className="avatar placeholder mr-3 mt-3">
           <div

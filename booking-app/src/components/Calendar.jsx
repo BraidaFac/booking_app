@@ -99,7 +99,7 @@ export default function Calendar(props) {
   return (
     <div>
       <Toaster />
-
+      <UserBox user={user} />
       <div className="flex flex-col md:mx-auto md:w-1/2  text-center px-2 my-2">
         <h2 className="text-4xl px-2 text-white">Reservas de turnos</h2>
         <h3 className="text-2xl px-2 text-white">Seleccione la fecha</h3>

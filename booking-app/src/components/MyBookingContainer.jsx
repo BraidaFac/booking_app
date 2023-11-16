@@ -50,20 +50,22 @@ function MyBookingContainer(props, ref) {
     }
   };
   return (
-    <div className="flex flex-col gap-4 mt-5">
-      <h2 className="text-4xl text-white text-center">Mis reservas</h2>
+    <div className="flex flex-col items-center gap-4 my-8">
+      <h2 className=" text-4xl text-white text-center">Otras reservas</h2>
 
-      {bookings.length === 0 ? (
+      {!loading && bookings.length === 0 ? (
         <p className="text-white text-center">No tienes reservas</p>
-      ) : (
+      ) : !loading ? (
         bookings.map((booking) => (
           <Booking
             key={booking.id}
-            btnDisabled={booking.user_id !== user.id}
+            btnDisabled={booking.user_id !== user.userId}
             {...booking}
             onDelete={onDelete}
           />
         ))
+      ) : (
+        <span className="loading loading-spinner text-warning loading-lg"></span>
       )}
     </div>
   );

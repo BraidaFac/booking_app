@@ -25,6 +25,36 @@ const { title } = Astro.props;
         --background: #405957;
       }
 
+      @media screen and (prefers-color-scheme: dark) {
+        [data-theme="lemonade"] {
+          font-family: system-ui, sans-serif;
+          background-color: var(--background);
+          margin: 0px;
+          padding: 0px;
+        }
+        .bg-yellow-1 {
+          background: #dec978;
+        }
+        .bg-pink-1 {
+          background: #f2c6a0;
+        }
+        .text-pink-1 {
+          color: #f2c6a0;
+        }
+        .bg-secondary {
+          background: #d0d9d7;
+        }
+        .text-secondary {
+          color: #d0d9d7;
+        }
+        .text-primary {
+          color: var(--background);
+        }
+        .bg-primary {
+          background-color: var(--background);
+        }
+      }
+
       [data-theme="lemonade"] {
         font-family: system-ui, sans-serif;
         background-color: var(--background);

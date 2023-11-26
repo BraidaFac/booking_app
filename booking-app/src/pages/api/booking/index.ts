@@ -1,9 +1,5 @@
 import type { APIRoute } from "astro";
-import {
-  createBooking,
-  getBookings,
-  getBookingsByUserId,
-} from "../../../lib/bookings.controller";
+import { createBooking, getBookings } from "../../../lib/bookings.controller";
 
 export const POST: APIRoute = async ({ request, locals }) => {
   const session = await locals.auth.validate();

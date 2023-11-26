@@ -1,4 +1,3 @@
-import type { User } from "@prisma/client";
 import { prisma } from "./prisma";
 
 export async function getBookings() {
@@ -25,7 +24,13 @@ export async function getBookingsById(id: string) {
 export async function getBookingsByUserId(user_id: string) {
   const date = new Date();
   date.setHours(0, 0, 0, 0);
-  return await prisma.booking.findMany({
+  const all_bookings = await prisma.booking.findMany({
+    include: { user: true },
+  });
+  const user_bookings = all_bookings.filter(
+    (booking) => booking.user_id === user_id && booking.booking_date >= date,
+  );
+  /*  return await prisma.booking.findMany({
     where: {
       user_id: user_id,
       AND: {
@@ -35,7 +40,8 @@ export async function getBookingsByUserId(user_id: string) {
       },
     },
     include: { user: true },
-  });
+  }); */
+  return user_bookings;
 }
 
 export async function createBooking(booking: {

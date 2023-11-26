@@ -31,7 +31,10 @@ function BookingContainer(props, ref) {
             }),
           );
         })
-        .finally(() => setLoading(false))
+        .finally(() => {
+          setLoading(false);
+          initialized.current = false;
+        })
         .catch((error) => console.log(error));
     }
   }, [refresh]);

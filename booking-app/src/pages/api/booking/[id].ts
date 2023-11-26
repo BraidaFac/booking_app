@@ -3,7 +3,7 @@ import {
   deleteBooking,
   validateDeleteBooking,
 } from "../../../lib/bookings.controller";
-export const DELETE: APIRoute = async ({ request, params, locals }) => {
+export const DELETE: APIRoute = async ({ params, locals }) => {
   const session = await locals.auth.validate();
   if (!session) return new Response("Unauthorized", { status: 401 });
   const user = session.user;

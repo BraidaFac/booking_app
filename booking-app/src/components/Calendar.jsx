@@ -56,12 +56,12 @@ export default function Calendar(props) {
             return { ...booking, booking_date: parseISO(booking.booking_date) };
           }),
         );
-        containersRefresh();
       })
       .catch((error) => console.log(error));
   }, [refresh]);
 
   const updateRefresh = () => {
+    containersRefresh();
     setRefresh((prevRefresh) => !prevRefresh);
   };
 

@@ -51,6 +51,7 @@ function MyBookingContainer(props, ref) {
       method: "DELETE",
     });
     if (res.status === 204) {
+      setBookings(bookings.filter((booking) => booking.id !== id));
       toast.success("Reserva cancelada");
       props.updateRefresh();
       setTimeout(() => {

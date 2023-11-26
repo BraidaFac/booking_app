@@ -3,14 +3,10 @@ import { prisma } from "./prisma";
 export async function getBookings() {
   const date = new Date();
   date.setHours(0, 0, 0, 0);
-  return await prisma.booking.findMany({
-    where: {
-      booking_date: {
-        gte: date,
-      },
-    },
+  const all_bookings = await prisma.booking.findMany({
     include: { user: true },
   });
+  return all_bookings.filter((booking) => booking.booking_date >= date);
 }
 
 export async function getBookingsById(id: string) {
@@ -30,17 +26,6 @@ export async function getBookingsByUserId(user_id: string) {
   const user_bookings = all_bookings.filter(
     (booking) => booking.user_id === user_id && booking.booking_date >= date,
   );
-  /*  return await prisma.booking.findMany({
-    where: {
-      user_id: user_id,
-      AND: {
-        booking_date: {
-          gte: date,
-        },
-      },
-    },
-    include: { user: true },
-  }); */
   return user_bookings;
 }
 

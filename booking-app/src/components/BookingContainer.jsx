@@ -34,7 +34,6 @@ function BookingContainer(props, ref) {
   }
   useEffect(() => {
     if (!initialized.current) {
-      console.log("fetching");
       initialized.current = true;
       setLoading(true);
       fetchBookings();

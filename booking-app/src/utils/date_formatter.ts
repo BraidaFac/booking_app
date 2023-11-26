@@ -70,7 +70,6 @@ export function formatDate(date: Date | number) {
 
 export function formatMonth(date: Date | number) {
   let formatMonth = "";
-
   switch (Number(format(date, "L"))) {
     case 1:
       formatMonth = "Enero";

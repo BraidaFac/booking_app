@@ -18,7 +18,6 @@ function MyBookingContainer(props, ref) {
     setRefresh((prevRefresh) => !prevRefresh);
   }
   useEffect(() => {
-    console.log("useEffect");
     setLoading(true);
     fetch(`/api/user/${user.userId}`, { method: "GET" })
       .then((response) => response.json())
@@ -45,10 +44,16 @@ function MyBookingContainer(props, ref) {
       method: "DELETE",
     });
     if (res.status === 204) {
-      toast.success("Reserva cancelada", { duration: 1000 });
+      toast.success("Reserva cancelada");
       props.updateRefresh();
+      setTimeout(() => {
+        toast.dismiss();
+      }, 1000);
     } else {
-      toast.error("No se pudo cancelar la reserva", { duration: 1000 });
+      toast.error("No se pudo cancelar la reserva");
+      setTimeout(() => {
+        toast.dismiss();
+      }, 1000);
     }
   };
   return (

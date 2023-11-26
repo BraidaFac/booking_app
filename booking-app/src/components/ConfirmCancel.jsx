@@ -15,9 +15,6 @@ function ConfirmCancel(ref) {
       }, 1000);
     } else {
       toast.error("No se pudo cancelar la reserva");
-      setTimeout(() => {
-        toast.dismiss();
-      }, 1000);
     }
   };
   return (

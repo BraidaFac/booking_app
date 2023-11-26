@@ -14,7 +14,6 @@ function BookingContainer(props, ref) {
   useEffect(() => {
     if (!initialized.current) {
       initialized.current = true;
-      console.log("useEffect");
       setLoading(true);
       fetch("/api/booking", { method: "GET" })
         .then((response) => response.json())
@@ -48,9 +47,15 @@ function BookingContainer(props, ref) {
     });
     if (res.status === 204) {
       props.updateRefresh();
-      toast.success("Reserva cancelada", { duration: 1000 });
+      toast.success("Reserva cancelada");
+      setTimeout(() => {
+        toast.dismiss();
+      }, 1000);
     } else {
-      toast.error("No se pudo cancelar la reserva", { duration: 1000 });
+      toast.error("No se pudo cancelar la reserva");
+      setTimeout(() => {
+        toast.dismiss();
+      }, 1000);
     }
   };
   return (

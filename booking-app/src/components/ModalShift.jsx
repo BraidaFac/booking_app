@@ -82,7 +82,7 @@ export default function ModalShift(props) {
                   <button
                     type="button"
                     disabled={morning}
-                    className="inline-flex w-full justify-center rounded-md bg-primary  px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-800  sm:w-auto disabled:bg-slate-300"
+                    className="inline-flex w-full justify-center rounded-md bg-pink-1  px-3 py-2 text-sm font-semibold text-white shadow-sm   sm:w-auto disabled:bg-slate-300"
                     onClick={() => bookShift("MORNING")}
                   >
                     Mediodia
@@ -91,7 +91,7 @@ export default function ModalShift(props) {
                     type="button"
                     disabled={evening}
                     className="inline-flex w-full justify-center rounded-md bg-primary px-3 py-2 text-sm font-semibold text-white shadow-sm   sm:w-auto 
-                    hover:bg-green-800  disabled:bg-slate-300"
+                      disabled:bg-slate-300"
                     onClick={() => bookShift("EVENING")}
                     ref={cancelButtonRef}
                   >

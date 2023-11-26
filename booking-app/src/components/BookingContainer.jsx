@@ -7,42 +7,44 @@ import toast from "react-hot-toast";
 function BookingContainer(props, ref) {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [refresh, setRefresh] = useState(false);
   const initialized = useRef(false);
   const user = props.user;
 
+  function fetchBookings() {
+    fetch("/api/booking", { method: "GET" })
+      .then((response) => response.json())
+      .then((data) => {
+        setBookings(
+          data.map((booking) => {
+            return {
+              id: booking.id,
+              shift: booking.shift,
+              floor: booking.user.floor,
+              flat: booking.user.flat,
+              booking_date: parseISO(booking.booking_date),
+              user_id: booking.user.id,
+            };
+          }),
+        );
+      })
+      .finally(() => {
+        setLoading(false);
+      })
+      .catch((error) => console.log(error));
+  }
   useEffect(() => {
     if (!initialized.current) {
+      console.log("fetching");
       initialized.current = true;
       setLoading(true);
-      fetch("/api/booking", { method: "GET" })
-        .then((response) => response.json())
-        .then((data) => {
-          setBookings(
-            data.map((booking) => {
-              return {
-                id: booking.id,
-                shift: booking.shift,
-                floor: booking.user.floor,
-                flat: booking.user.flat,
-                booking_date: parseISO(booking.booking_date),
-                user_id: booking.user.id,
-              };
-            }),
-          );
-        })
-        .finally(() => {
-          setLoading(false);
-          initialized.current = false;
-        })
-        .catch((error) => console.log(error));
+      fetchBookings();
     }
-  }, [refresh]);
+  }, []);
   useImperativeHandle(ref, () => ({
     updateRefresh,
   }));
   function updateRefresh() {
-    setRefresh((prevRefresh) => !prevRefresh);
+    fetchBookings();
   }
   const onDelete = async (id) => {
     const res = await fetch(`/api/booking/${id}`, {

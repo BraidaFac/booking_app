@@ -6,49 +6,45 @@ import toast from "react-hot-toast";
 
 function MyBookingContainer(props, ref) {
   const [bookings, setBookings] = useState([]);
-  const [refresh, setRefresh] = useState(false);
   const [loading, setLoading] = useState(false);
   const initialized = useRef(false);
   const user = props.user;
 
-  const fetchUserBookings = (user) => {
-    if (!initialized.current) {
-      initialized.current = true;
-      setLoading(true);
-      fetch(`/api/user/${user.userId}`, { method: "GET" })
-        .then((response) => response.json())
-        .then((data) => {
-          setBookings(
-            data.map((booking) => {
-              return {
-                id: booking.id,
-                shift: booking.shift,
-                floor: booking.user.floor,
-                flat: booking.user.flat,
-                booking_date: parseISO(booking.booking_date),
-                user_id: booking.user.id,
-              };
-            }),
-          );
-        })
-        .finally(() => {
-          setLoading(false);
-          initialized.current = false;
-        })
-        .catch((error) => console.log(error));
-    }
-  };
+  function fetchBookings() {
+    fetch(`/api/user/${user.userId}`, { method: "GET" })
+      .then((response) => response.json())
+      .then((data) => {
+        setBookings(
+          data.map((booking) => {
+            return {
+              id: booking.id,
+              shift: booking.shift,
+              floor: booking.user.floor,
+              flat: booking.user.flat,
+              booking_date: parseISO(booking.booking_date),
+              user_id: booking.user.id,
+            };
+          }),
+        );
+      })
+      .finally(() => {
+        setLoading(false);
+      })
+      .catch((error) => console.log(error));
+  }
   useImperativeHandle(ref, () => ({
     updateRefresh,
   }));
   function updateRefresh() {
-    setRefresh((prevRefresh) => !prevRefresh);
+    fetchBookings();
   }
   useEffect(() => {
-    setLoading(true);
-    console.log(user);
-    fetchUserBookings(user);
-  }, [refresh]);
+    if (!initialized.current) {
+      initialized.current = true;
+      setLoading(true);
+      fetchBookings();
+    }
+  }, []);
 
   const onDelete = async (id) => {
     const res = await fetch(`api/booking/${id}`, {

@@ -67,3 +67,49 @@ export function formatDate(date: Date | number) {
 
   return formatDay + formatMonth;
 }
+
+export function formatMonth(date: Date | number) {
+  let formatMonth = "";
+  let formatYear = "";
+
+  switch (Number(format(date, "L"))) {
+    case 1:
+      formatMonth = "Enero";
+      break;
+    case 2:
+      formatMonth = "Febrero";
+      break;
+    case 3:
+      formatMonth = "Marzo";
+      break;
+    case 4:
+      formatMonth = "Abril";
+      break;
+    case 5:
+      formatMonth = "Mayo";
+      break;
+    case 6:
+      formatMonth = "Junio";
+      break;
+    case 7:
+      formatMonth = "Julio";
+      break;
+    case 8:
+      formatMonth = "Agosto";
+      break;
+    case 9:
+      formatMonth = "Septiembre";
+      break;
+    case 10:
+      formatMonth = "Octubre";
+      break;
+    case 11:
+      formatMonth = "Noviembre";
+      break;
+    case 12:
+      formatMonth = "Diciembre";
+      break;
+  }
+
+  return `${formatMonth} de ${format(date, "y")}`;
+}

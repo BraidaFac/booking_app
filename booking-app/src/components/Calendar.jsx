@@ -7,6 +7,7 @@ import MyBookingContainer from "./MyBookingContainer.jsx";
 import BookingContainer from "./BookingContainer.jsx";
 import UserBox from "./UserBox.jsx";
 import { Toaster } from "react-hot-toast";
+import { formatMonth } from "../utils/date_formatter.ts";
 
 import {
   add,
@@ -114,7 +115,7 @@ export default function Calendar(props) {
             <ChevronLeftIcon className="w-8 h-8" aria-hidden="true" />
           </button>
           <h2 className="flex-auto font-semibold text-2xl text-gray-900 ">
-            {format(firstDayCurrentMonth, "MMMM yyyy")}
+            {formatMonth(firstDayCurrentMonth)}
           </h2>
 
           <button

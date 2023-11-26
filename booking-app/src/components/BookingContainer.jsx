@@ -1,4 +1,4 @@
-import { useState, useEffect, useImperativeHandle } from "react";
+import { useState, useEffect, useImperativeHandle, useRef } from "react";
 import { parseISO } from "date-fns";
 import Booking from "./Booking.jsx";
 import React from "react";
@@ -8,29 +8,33 @@ function BookingContainer(props, ref) {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(false);
   const [refresh, setRefresh] = useState(false);
-
+  const initialized = useRef(false);
   const user = props.user;
 
   useEffect(() => {
-    setLoading(true);
-    fetch("/api/booking", { method: "GET" })
-      .then((response) => response.json())
-      .then((data) => {
-        setBookings(
-          data.map((booking) => {
-            return {
-              id: booking.id,
-              shift: booking.shift,
-              floor: booking.user.floor,
-              flat: booking.user.flat,
-              booking_date: parseISO(booking.booking_date),
-              user_id: booking.user.id,
-            };
-          }),
-        );
-      })
-      .finally(() => setLoading(false))
-      .catch((error) => console.log(error));
+    if (!initialized.current) {
+      initialized.current = true;
+      console.log("useEffect");
+      setLoading(true);
+      fetch("/api/booking", { method: "GET" })
+        .then((response) => response.json())
+        .then((data) => {
+          setBookings(
+            data.map((booking) => {
+              return {
+                id: booking.id,
+                shift: booking.shift,
+                floor: booking.user.floor,
+                flat: booking.user.flat,
+                booking_date: parseISO(booking.booking_date),
+                user_id: booking.user.id,
+              };
+            }),
+          );
+        })
+        .finally(() => setLoading(false))
+        .catch((error) => console.log(error));
+    }
   }, [refresh]);
   useImperativeHandle(ref, () => ({
     updateRefresh,

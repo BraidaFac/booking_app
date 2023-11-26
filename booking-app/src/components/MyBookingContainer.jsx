@@ -1,4 +1,4 @@
-import { useState, useEffect, useImperativeHandle } from "react";
+import { useState, useEffect, useImperativeHandle, useRef } from "react";
 import { parseISO } from "date-fns";
 import Booking from "./Booking.jsx";
 import React from "react";
@@ -18,6 +18,7 @@ function MyBookingContainer(props, ref) {
     setRefresh((prevRefresh) => !prevRefresh);
   }
   useEffect(() => {
+    console.log("useEffect");
     setLoading(true);
     fetch(`/api/user/${user.userId}`, { method: "GET" })
       .then((response) => response.json())

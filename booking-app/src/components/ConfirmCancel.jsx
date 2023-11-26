@@ -10,8 +10,14 @@ function ConfirmCancel(ref) {
     if (res.status === 204) {
       toast.success("Reserva cancelada");
       props.updateRefresh();
+      setTimeout(() => {
+        toast.dismiss();
+      }, 1000);
     } else {
       toast.error("No se pudo cancelar la reserva");
+      setTimeout(() => {
+        toast.dismiss();
+      }, 1000);
     }
   };
   return (

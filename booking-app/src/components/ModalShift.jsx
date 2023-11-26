@@ -29,7 +29,10 @@ export default function ModalShift(props) {
       .then((data) => {
         if (data.status === 201) {
           updateRefresh();
-          toast.success("Reserva exitosa", { duration: 1000 });
+          toast.success("Reserva exitosa");
+          setTimeout(() => {
+            toast.dismiss();
+          }, 1000);
           setOpen(false);
         }
       })

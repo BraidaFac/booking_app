@@ -23,6 +23,7 @@ function MyBookingContainer(props, ref) {
               flat: booking.user.flat,
               booking_date: parseISO(booking.booking_date),
               user_id: booking.user.id,
+              shared: booking.shared,
             };
           }),
         );

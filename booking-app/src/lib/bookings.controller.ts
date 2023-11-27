@@ -33,6 +33,7 @@ export async function createBooking(booking: {
   user_id: string;
   booking_date: string;
   shift: "MORNING" | "EVENING";
+  shared: boolean;
 }) {
   booking = await sanitizaceInput(booking);
   try {
@@ -61,6 +62,7 @@ async function sanitizaceInput(input: {
   user_id: string;
   booking_date: string;
   shift: "MORNING" | "EVENING";
+  shared: boolean;
 }) {
   const { user_id, booking_date, shift } = input;
 

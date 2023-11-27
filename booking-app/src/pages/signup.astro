@@ -44,9 +44,7 @@ if (Astro.request.method === "POST") {
         userId: user.userId,
         attributes: {},
       });
-      return Astro.redirect("/", 302); // redirect to profile page
     } catch (error) {
-      console.log(error);
       if (error instanceof LuciaError) {
         if (error.message.match("USER_TABLE_UNIQUE_CONSTRAINT_ERROR")) {
           errorMessage = "Username already taken";

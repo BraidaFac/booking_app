@@ -1,4 +1,4 @@
-import { Fragment, useRef } from "react";
+import { Fragment, useRef, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { formatDate } from "../utils/date_formatter.ts";
 import toast from "react-hot-toast";
@@ -7,16 +7,18 @@ export default function ModalShift(props) {
   const { bookings, day, user, setOpen, updateRefresh } = props;
   let morning;
   let evening;
+  const [shared, setShared] = useState(false);
   if (bookings) {
     morning = bookings.find((booking) => booking.shift === "MORNING");
     evening = bookings.find((booking) => booking.shift === "EVENING");
   }
 
-  function bookShift(shift) {
+  function bookShift(shift, exlusive) {
     const booking = {
       user_id: user.userId,
       booking_date: day,
       shift: shift,
+      shared: shared,
     };
     fetch("/api/booking", {
       method: "POST",
@@ -73,7 +75,7 @@ export default function ModalShift(props) {
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
               <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm">
-                <div className="bg-gray-50 px-4 py-4 pt-1 h-36 flex flex-col justify-around sm:px-6 w-80 sm:w-full">
+                <div className="bg-gray-50 px-4 py-4 flex flex-col justify-around sm:px-6 w-80 sm:w-full">
                   <div className="text-center justify-items-start">
                     <p className="text-sm md:text-lg font-semibold">
                       {day && formatDate(day)}
@@ -82,7 +84,7 @@ export default function ModalShift(props) {
                   <button
                     type="button"
                     disabled={morning}
-                    className="inline-flex w-full justify-center rounded-md bg-pink-1  px-3 py-2 text-sm font-semibold text-white shadow-sm   sm:w-auto disabled:bg-slate-300"
+                    className="inline-flex w-full justify-center rounded-md bg-pink-1  px-3 py-2 text-sm font-semibold text-white shadow-sm   sm:w-auto disabled:bg-slate-300 mb-3 mt-3"
                     onClick={() => bookShift("MORNING")}
                   >
                     Mediodia
@@ -97,6 +99,16 @@ export default function ModalShift(props) {
                   >
                     Noche
                   </button>
+                  <div className="mt-4 text-center">
+                    <label className="text-sm md:text-lg font-semibold ">
+                      Compartido
+                    </label>
+                    <input
+                      className="form-checkbox h-5 w-5 bg-primary ml-3"
+                      type="checkbox"
+                      onChange={() => setShared(!shared)}
+                    />
+                  </div>
                 </div>
               </Dialog.Panel>
             </Transition.Child>

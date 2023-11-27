@@ -12,12 +12,14 @@ export const POST: APIRoute = async ({ request, locals }) => {
     user_id: string;
     booking_date: string;
     shift: "MORNING" | "EVENING";
+    shared: boolean;
   } = await request.json();
+
   const response = await createBooking(booking);
   if (response && response.status === 201) {
     return new Response(JSON.stringify(response));
   }
-  return new Response(null, {
+  return new Response(JSON.stringify(null), {
     status: 400,
   });
 };

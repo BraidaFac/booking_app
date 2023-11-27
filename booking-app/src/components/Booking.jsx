@@ -22,22 +22,22 @@ export default function Booking(props) {
             toast(
               (t) => (
                 <span className="block">
-                  Estas seguro de eliminar la reserva?
+                  Estas seguro?
                   <div className="flex flex-row justify-between mt-2">
                     <button
-                      className="btn btn-sm btn-error"
+                      className="btn btn-sm"
                       onClick={() => {
                         onDelete(id);
                         toast.dismiss(t.id);
                       }}
                     >
-                      Eliminar
+                      SI
                     </button>
                     <button
-                      className="btn btn-sm"
+                      className="btn btn-sm  btn-error"
                       onClick={() => toast.dismiss(t.id)}
                     >
-                      Cancelar
+                      NO
                     </button>
                   </div>
                 </span>

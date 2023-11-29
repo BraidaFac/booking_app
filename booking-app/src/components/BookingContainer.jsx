@@ -52,15 +52,17 @@ function BookingContainer(props, ref) {
     });
     if (res.status === 204) {
       props.updateRefresh();
-      toast.success("Reserva cancelada");
+      setBookings(bookings.filter((booking) => booking.id !== id));
+      const toastId = toast.success("Reserva cancelada");
+      console.log(toastId);
       setTimeout(() => {
         toast.dismiss();
-      }, 1000);
+      }, 500);
     } else {
       toast.error("No se pudo cancelar la reserva");
       setTimeout(() => {
         toast.dismiss();
-      }, 1000);
+      }, 500);
     }
   };
   return (

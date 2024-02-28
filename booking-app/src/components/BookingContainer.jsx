@@ -14,19 +14,22 @@ function BookingContainer(props, ref) {
     fetch("/api/booking", { method: "GET" })
       .then((response) => response.json())
       .then((data) => {
-        setBookings(
-          data.map((booking) => {
-            return {
-              id: booking.id,
-              shift: booking.shift,
-              floor: booking.user.floor,
-              flat: booking.user.flat,
-              booking_date: parseISO(booking.booking_date),
-              user_id: booking.user.id,
-              shared: booking.shared,
-            };
-          }),
+        const bookings = data.map((booking) => {
+          return {
+            id: booking.id,
+            shift: booking.shift,
+            floor: booking.user.floor,
+            flat: booking.user.flat,
+            booking_date: parseISO(booking.booking_date),
+            user_id: booking.user.id,
+            shared: booking.shared,
+          };
+        });
+        bookings.sort(
+          (a, b) => new Date(a.booking_date) - new Date(b.booking_date),
         );
+
+        setBookings(bookings);
       })
       .finally(() => {
         setLoading(false);

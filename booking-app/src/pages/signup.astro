@@ -15,7 +15,6 @@ if (Astro.request.method === "POST") {
   const flat = formData.get("flat")?.toString();
   const floor = formData.get("floor")?.toString();
   const password = formData.get("password");
-  console.log(username, flat, floor, password);
   // basic check
   const validUsername =
     typeof username === "string" &&
@@ -25,7 +24,6 @@ if (Astro.request.method === "POST") {
 
   if (validUsername && validPassword && flat && floor) {
     try {
-      console.log("creating user");
       const user = await auth.createUser({
         key: {
           providerId: "username", // auth method
@@ -38,11 +36,6 @@ if (Astro.request.method === "POST") {
           floor,
           role: "USER",
         },
-      });
-      console.log(user);
-      const session = await auth.createSession({
-        userId: user.userId,
-        attributes: {},
       });
     } catch (error) {
       if (error instanceof LuciaError) {
@@ -100,6 +93,7 @@ if (Astro.request.method === "POST") {
         class="input input-bordered input-accent input-sm w-full max-w-xs"
       />
       <button type="submit" class="btn btn-accent btn-sm w-32">Crear</button>
+      {errorMessage && <p class="text-red-500 text-sm">{errorMessage}</p>}
     </form>
   </div>
 </Layout>

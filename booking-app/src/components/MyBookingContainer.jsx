@@ -3,8 +3,10 @@ import { parseISO } from "date-fns";
 import Booking from "./Booking.jsx";
 import React from "react";
 import toast from "react-hot-toast";
+import { useLoadingState } from "../lib/loading_state.ts";
 
 function MyBookingContainer(props, ref) {
+  const { isLoading, setIsLoading } = useLoadingState();
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(false);
   const initialized = useRef(false);
@@ -28,7 +30,6 @@ function MyBookingContainer(props, ref) {
         bookings.sort(
           (a, b) => new Date(a.booking_date) - new Date(b.booking_date),
         );
-
         setBookings(bookings);
       })
       .finally(() => {
@@ -51,9 +52,11 @@ function MyBookingContainer(props, ref) {
   }, []);
 
   const onDelete = async (id) => {
+    setIsLoading(true);
     const res = await fetch(`api/booking/${id}`, {
       method: "DELETE",
     });
+    setIsLoading(false);
     if (res.status === 204) {
       setBookings(bookings.filter((booking) => booking.id !== id));
       toast.success("Reserva cancelada");

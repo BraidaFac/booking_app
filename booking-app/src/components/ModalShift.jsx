@@ -2,7 +2,10 @@ import { Fragment, useRef, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { formatDate } from "../utils/date_formatter.ts";
 import toast from "react-hot-toast";
+import { useLoadingState } from "../lib/loading_state.ts";
+
 export default function ModalShift(props) {
+  const [isLoading, setIsLoading] = useState(false);
   const cancelButtonRef = useRef(null);
   const { bookings, day, user, setOpen, updateRefresh } = props;
   let morning;
@@ -14,6 +17,7 @@ export default function ModalShift(props) {
   }
 
   function bookShift(shift, exlusive) {
+    setIsLoading(true);
     const booking = {
       user_id: user.userId,
       booking_date: day,
@@ -29,6 +33,7 @@ export default function ModalShift(props) {
     })
       .then((response) => response.json())
       .then((data) => {
+        setIsLoading(false);
         if (data.status === 201) {
           updateRefresh();
           toast.success("Reserva exitosa");
@@ -39,6 +44,8 @@ export default function ModalShift(props) {
         }
       })
       .catch((error) => {
+        console.log(error);
+
         toast.error("Error al reservar turno");
       });
   }
@@ -75,41 +82,47 @@ export default function ModalShift(props) {
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
               <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm">
-                <div className="bg-gray-50 px-4 py-4 flex flex-col justify-around sm:px-6 w-80 sm:w-full">
-                  <div className="text-center justify-items-start">
-                    <p className="text-sm md:text-lg font-semibold">
-                      {day && formatDate(day)}
-                    </p>
+                {isLoading ? (
+                  <div className="text-center h-32 py-10 w-80">
+                    <span className="loading loading-spinner text-warning loading-lg"></span>
                   </div>
-                  <button
-                    type="button"
-                    disabled={morning}
-                    className="inline-flex w-full justify-center rounded-md bg-pink-1  px-3 py-2 text-sm font-semibold text-white shadow-sm   sm:w-auto disabled:bg-slate-300 mb-3 mt-3"
-                    onClick={() => bookShift("MORNING")}
-                  >
-                    Mediodia
-                  </button>
-                  <button
-                    type="button"
-                    disabled={evening}
-                    className="inline-flex w-full justify-center rounded-md bg-primary px-3 py-2 text-sm font-semibold text-white shadow-sm   sm:w-auto 
+                ) : (
+                  <div className="bg-gray-50 px-4 py-4 flex flex-col justify-around sm:px-6 w-80 sm:w-full">
+                    <div className="text-center justify-items-start">
+                      <p className="text-sm md:text-lg font-semibold">
+                        {day && formatDate(day)}
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      disabled={morning}
+                      className="inline-flex w-full justify-center rounded-md bg-pink-1  px-3 py-2 text-sm font-semibold text-white shadow-sm   sm:w-auto disabled:bg-slate-300 mb-3 mt-3"
+                      onClick={() => bookShift("MORNING")}
+                    >
+                      Mediodia
+                    </button>
+                    <button
+                      type="button"
+                      disabled={evening}
+                      className="inline-flex w-full justify-center rounded-md bg-primary px-3 py-2 text-sm font-semibold text-white shadow-sm   sm:w-auto 
                       disabled:bg-slate-300"
-                    onClick={() => bookShift("EVENING")}
-                    ref={cancelButtonRef}
-                  >
-                    Noche
-                  </button>
-                  <div className="mt-4 text-center">
-                    <label className="text-sm md:text-lg font-semibold ">
-                      Compartido
-                    </label>
-                    <input
-                      className="form-checkbox h-5 w-5 bg-primary ml-3"
-                      type="checkbox"
-                      onChange={() => setShared(!shared)}
-                    />
+                      onClick={() => bookShift("EVENING")}
+                      ref={cancelButtonRef}
+                    >
+                      Noche
+                    </button>
+                    <div className="mt-4 text-center">
+                      <label className="text-sm md:text-lg font-semibold ">
+                        Compartido
+                      </label>
+                      <input
+                        className="form-checkbox h-5 w-5 bg-primary ml-3"
+                        type="checkbox"
+                        onChange={() => setShared(!shared)}
+                      />
+                    </div>
                   </div>
-                </div>
+                )}
               </Dialog.Panel>
             </Transition.Child>
           </div>

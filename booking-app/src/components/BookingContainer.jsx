@@ -3,8 +3,11 @@ import { parseISO } from "date-fns";
 import Booking from "./Booking.jsx";
 import React from "react";
 import toast from "react-hot-toast";
+import { useLoadingState } from "../lib/loading_state.ts";
 
 function BookingContainer(props, ref) {
+  const { isLoading, setIsLoading } = useLoadingState();
+
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(false);
   const initialized = useRef(false);
@@ -50,9 +53,11 @@ function BookingContainer(props, ref) {
     fetchBookings();
   }
   const onDelete = async (id) => {
+    setIsLoading(true);
     const res = await fetch(`/api/booking/${id}`, {
       method: "DELETE",
     });
+    setIsLoading(false);
     if (res.status === 204) {
       props.updateRefresh();
       setBookings(bookings.filter((booking) => booking.id !== id));

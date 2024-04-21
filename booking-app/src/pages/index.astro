@@ -2,6 +2,7 @@
 import Layout from "../layouts/Layout.astro";
 import Calendar from "../components/Calendar.jsx";
 import NavButtons from "../components/NavButtons.astro";
+import React from "react";
 
 const session = await Astro.locals.auth.validate();
 if (!session) return Astro.redirect("/login", 302);
@@ -10,7 +11,9 @@ const user = session?.user;
 
 <Layout title="3 de febrero 1101">
   <main>
-    <Calendar {user} client:only="react" />
+    <React.StrictMode>
+      <Calendar {user} client:only="react" />
+    </React.StrictMode>
   </main>
   <style></style>
 </Layout>

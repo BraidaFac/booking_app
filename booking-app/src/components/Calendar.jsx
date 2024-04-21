@@ -24,6 +24,7 @@ import {
 } from "date-fns/index.js";
 import { useState, useEffect, useRef } from "react";
 import { isBefore } from "date-fns/fp/index.js";
+import { useLoadingState } from "../lib/loading_state.ts";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -34,6 +35,8 @@ function isPass(day) {
 }
 
 export default function Calendar(props) {
+  const { setIsLoading, isLoading } = useLoadingState();
+
   const myBookingContainerRef = useRef(null);
   const bookingContainerRef = useRef(null);
 
@@ -57,7 +60,10 @@ export default function Calendar(props) {
           }),
         );
       })
-      .catch((error) => console.log(error));
+      .catch((error) => console.log(error))
+      .finally(() => {
+        setIsLoading(false);
+      });
   }, [refresh]);
 
   const updateRefresh = () => {
@@ -100,102 +106,110 @@ export default function Calendar(props) {
     <div>
       <Toaster />
       <UserBox user={user} />
-      <div className="flex flex-col md:mx-auto md:w-1/2  text-center px-2 my-2">
-        <h2 className="text-4xl px-2 text-white">Reservas de turnos</h2>
-        <h3 className="text-2xl px-2 text-white">Seleccione la fecha</h3>
-      </div>
-      <div className="p-3 md:p-5 md:w-1/3 mx-auto w-11/12  mt-10  bg-amber-50 rounded-lg shadow-lg shadow-white">
-        <div className="flex items-center text-center">
-          <button
-            type="button"
-            onClick={previousMonth}
-            className="-my-1.5 flex flex-none items-center justify-center p-1.5 text-gray-400"
-          >
-            <ChevronLeftIcon className="w-8 h-8" aria-hidden="true" />
-          </button>
-          <h2 className="flex-auto font-semibold text-2xl text-gray-900 ">
-            {formatMonth(firstDayCurrentMonth)}
-          </h2>
-
-          <button
-            onClick={nextMonth}
-            type="button"
-            className="-my-1.5 -mr-1.5 ml-2 flex flex-none items-center justify-center p-1.5 text-gray-400 hover:text-gray-500"
-          >
-            <ChevronRightIcon className="w-8 h-8" aria-hidden="true" />
-          </button>
+      {isLoading ? (
+        <div className="text-center mt-14">
+          <span className="loading loading-spinner text-warning loading-lg"></span>
         </div>
-        <div className="grid grid-cols-7 mt-10 text-xs leading-6 text-center text-primary">
-          <div>D</div>
-          <div>L</div>
-          <div>M</div>
-          <div>M</div>
-          <div>J</div>
-          <div>V</div>
-          <div>S</div>
-        </div>
-        <div className="grid grid-cols-7 mt-2 text-sm">
-          {days.map((day, dayIdx) => (
-            <div
-              key={day.toString()}
-              className={classNames(
-                dayIdx === 0 && colStartClasses[getDay(day)],
-                "py-1.5",
-              )}
-            >
+      ) : (
+        <>
+          <div className="flex flex-col md:mx-auto md:w-1/2  text-center px-2 my-2">
+            <h2 className="text-4xl px-2 text-white">Reservas de turnos</h2>
+            <h3 className="text-2xl px-2 text-white">Seleccione la fecha</h3>
+          </div>
+          <div className="p-3 md:p-5 md:w-1/3 mx-auto w-11/12  mt-10  bg-amber-50 rounded-lg shadow-lg shadow-white">
+            <div className="flex items-center text-center">
               <button
-                disabled={
-                  bookings.filter(
-                    (booking) =>
-                      isSameDay(day, booking.booking_date) &&
-                      isSameMonth(day, booking.booking_date) &&
-                      isSameYear(day, booking.booking_date),
-                  ).length >= 2 || isPass(day)
-                }
                 type="button"
-                onClick={() => {
-                  searchBookings(day);
-                }}
-                className={classNames(
-                  !isPass(day) &&
-                    "disabled:text-red-400 disabled:cursor-not-allowed",
-                  "text-gray-900",
-                  isToday(day) && "text-white",
-                  !isToday(day) && "text-gray-900",
-                  isToday(day) && "bg-primary",
-                  !isToday(day) && "bg-booking-card",
-                  "enabled:hover:bg-gray-200",
-                  isToday(day) && "font-semibold",
-                  "mx-auto flex h-8 w-8 items-center justify-center rounded-full",
-                  isPass(day) && "disabled:text-gray-400",
-                )}
+                onClick={previousMonth}
+                className="-my-1.5 flex flex-none items-center justify-center p-1.5 text-gray-400"
               >
-                <time dateTime={format(day, "yyyy-MM-dd")}>
-                  {format(day, "d")}
-                </time>
+                <ChevronLeftIcon className="w-8 h-8" aria-hidden="true" />
+              </button>
+              <h2 className="flex-auto font-semibold text-2xl text-gray-900 ">
+                {formatMonth(firstDayCurrentMonth)}
+              </h2>
+
+              <button
+                onClick={nextMonth}
+                type="button"
+                className="-my-1.5 -mr-1.5 ml-2 flex flex-none items-center justify-center p-1.5 text-gray-400 hover:text-gray-500"
+              >
+                <ChevronRightIcon className="w-8 h-8" aria-hidden="true" />
               </button>
             </div>
-          ))}
-        </div>
-      </div>
-      <ModalShift
-        updateRefresh={updateRefresh}
-        open={open}
-        setOpen={setOpen}
-        bookings={bookingDay}
-        day={selectedDay}
-        user={user}
-      />
-      <MyBookingContainer
-        user={user}
-        ref={myBookingContainerRef}
-        updateRefresh={updateRefresh}
-      />
-      <BookingContainer
-        user={user}
-        ref={bookingContainerRef}
-        updateRefresh={updateRefresh}
-      />
+            <div className="grid grid-cols-7 mt-10 text-xs leading-6 text-center text-primary">
+              <div>D</div>
+              <div>L</div>
+              <div>M</div>
+              <div>M</div>
+              <div>J</div>
+              <div>V</div>
+              <div>S</div>
+            </div>
+            <div className="grid grid-cols-7 mt-2 text-sm">
+              {days.map((day, dayIdx) => (
+                <div
+                  key={day.toString()}
+                  className={classNames(
+                    dayIdx === 0 && colStartClasses[getDay(day)],
+                    "py-1.5",
+                  )}
+                >
+                  <button
+                    disabled={
+                      bookings.filter(
+                        (booking) =>
+                          isSameDay(day, booking.booking_date) &&
+                          isSameMonth(day, booking.booking_date) &&
+                          isSameYear(day, booking.booking_date),
+                      ).length >= 2 || isPass(day)
+                    }
+                    type="button"
+                    onClick={() => {
+                      searchBookings(day);
+                    }}
+                    className={classNames(
+                      !isPass(day) &&
+                        "disabled:text-red-400 disabled:cursor-not-allowed",
+                      "text-gray-900",
+                      isToday(day) && "text-white",
+                      !isToday(day) && "text-gray-900",
+                      isToday(day) && "bg-primary",
+                      !isToday(day) && "bg-booking-card",
+                      "enabled:hover:bg-gray-200",
+                      isToday(day) && "font-semibold",
+                      "mx-auto flex h-8 w-8 items-center justify-center rounded-full",
+                      isPass(day) && "disabled:text-gray-400",
+                    )}
+                  >
+                    <time dateTime={format(day, "yyyy-MM-dd")}>
+                      {format(day, "d")}
+                    </time>
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+          <ModalShift
+            updateRefresh={updateRefresh}
+            open={open}
+            setOpen={setOpen}
+            bookings={bookingDay}
+            day={selectedDay}
+            user={user}
+          />
+          <MyBookingContainer
+            user={user}
+            ref={myBookingContainerRef}
+            updateRefresh={updateRefresh}
+          />
+          <BookingContainer
+            user={user}
+            ref={bookingContainerRef}
+            updateRefresh={updateRefresh}
+          />
+        </>
+      )}
     </div>
   );
 }

@@ -33,11 +33,13 @@ export default function UserBox(props) {
             Salir
           </a>
         </li>
-        <li>
-          <a className="text-white" href="/password">
-            Password
-          </a>
-        </li>
+        {user.role === "ADMIN" && (
+          <li>
+            <a className="text-white" href="/password">
+              Password
+            </a>
+          </li>
+        )}
       </ul>
     </details>
   );

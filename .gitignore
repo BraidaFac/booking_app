@@ -1,0 +1,5 @@
+.claude/
+bkp/
+feature-research.html
+*.pem
+.env*

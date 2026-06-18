@@ -25,12 +25,6 @@ export const POST: APIRoute = async ({ request, locals, params }) => {
     await auth.invalidateAllUserSessions(user.userId);
     await auth.updateKeyPassword("username", user.username, password); // TODO: change to password
 
-    if (!user.passwordVerified) {
-      user = await auth.updateUserAttributes(user.userId, {
-        passwordVerified: Number(true),
-      });
-    }
-
     const session = await auth.createSession({
       userId: user.userId,
       attributes: {},

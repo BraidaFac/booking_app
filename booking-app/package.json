@@ -13,7 +13,6 @@
   "dependencies": {
     "@astrojs/react": "^3.0.3",
     "@astrojs/tailwind": "^5.0.2",
-    "@astrojs/vercel": "^8.0.4",
     "@headlessui/react": "^1.7.17",
     "@heroicons/react": "^2.0.18",
     "@lucia-auth/adapter-mongoose": "^3.0.1",

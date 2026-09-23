@@ -20,20 +20,20 @@ export default async function HomePage() {
   ]);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="h-screen flex flex-col bg-background">
       <Navbar />
-      <main className="max-w-5xl mx-auto px-4 sm:px-6 py-4 sm:py-8">
+      <main className="flex-1 min-h-0 w-full max-w-5xl mx-auto px-4 sm:px-6 py-4 sm:py-8 flex flex-col">
         <div className="mb-4 sm:mb-6">
           <h1 className="text-2xl font-bold text-foreground">Reservas de turnos</h1>
           <p className="text-sm text-muted-foreground mt-1">Seleccioná un día para reservar tu turno</p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-6">
+        <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-6">
           {/* Calendar */}
           <BookingCalendar userId={session.user.id} isAdmin={isAdmin} />
 
           {/* Sidebar */}
-          <div className="space-y-6">
+          <div className="space-y-6 lg:overflow-y-auto scrollbar-hide">
             <div className="rounded-xl border bg-card p-4 shadow-sm space-y-4">
               <BookingList
                 initialBookings={myBookings}

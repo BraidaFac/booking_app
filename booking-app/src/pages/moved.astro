@@ -1,0 +1,584 @@
+---
+// src/pages/moved.astro
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nueva dirección · Caraná 6</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,600;0,700;1,600;1,700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #405957;
+        --yellow: #dec978;
+        --pink: #f2c6a0;
+        --secondary: #d0d9d7;
+        interpolate-size: allow-keywords;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html, body {
+        width: 100%;
+      }
+
+      body {
+        font-family: system-ui, sans-serif;
+        background-color: var(--bg);
+        color: var(--secondary);
+        min-height: 100svh;
+        padding: 6rem 2rem !important;
+        position: relative;
+      }
+
+      /* Grain / noise texture */
+      body::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox%3D%220 0 256 256%22 xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cfilter id%3D%22noise%22%3E%3CfeTurbulence type%3D%22fractalNoise%22 baseFrequency%3D%220.9%22 numOctaves%3D%224%22 stitchTiles%3D%22stitch%22%2F%3E%3C%2Ffilter%3E%3Crect width%3D%22100%25%22 height%3D%22100%25%22 filter%3D%22url(%23noise)%22%2F%3E%3C%2Fsvg%3E");
+        opacity: 0.055;
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      main {
+        position: relative;
+        z-index: 1;
+        max-width: 560px;
+        width: 90%;
+        margin-left: auto;
+        margin-right: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 2.75rem;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.11);
+        border-radius: 1.5rem;
+        padding: 2.75rem 2.25rem;
+        backdrop-filter: blur(2px);
+        -webkit-backdrop-filter: blur(2px);
+      }
+
+      /* ── Staggered fade-in via @starting-style ── */
+      .hero,
+      .link-section,
+      .credentials,
+      .install-section {
+        opacity: 1;
+        translate: 0 0;
+        transition:
+          opacity 0.55s ease-out,
+          translate 0.55s ease-out;
+      }
+
+      @starting-style {
+        .hero,
+        .link-section,
+        .credentials,
+        .install-section {
+          opacity: 0;
+          translate: 0 20px;
+        }
+      }
+
+      .link-section   { transition-delay: 0.1s; }
+      .credentials    { transition-delay: 0.2s; }
+      .install-section { transition-delay: 0.3s; }
+
+      @media (prefers-reduced-motion: reduce) {
+        .hero,
+        .link-section,
+        .credentials,
+        .install-section {
+          transition: none;
+          translate: none;
+        }
+      }
+
+      /* ── Hero ── */
+      .hero {
+        display: flex;
+        flex-direction: column;
+        gap: 1.1rem;
+      }
+
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        background: var(--yellow);
+        color: var(--bg);
+        font-weight: 700;
+        font-size: 0.68rem;
+        letter-spacing: 0.13em;
+        text-transform: uppercase;
+        padding: 0.3rem 0.9rem;
+        border-radius: 9999px;
+        width: fit-content;
+      }
+
+      .badge-dot {
+        width: 6px;
+        height: 6px;
+        background: var(--bg);
+        border-radius: 50%;
+        opacity: 0.5;
+        flex-shrink: 0;
+      }
+
+      h1 {
+        font-family: 'Lora', Georgia, serif;
+        font-size: clamp(2rem, 5.5vw, 2.85rem);
+        font-weight: 700;
+        color: #fff;
+        line-height: 1.18;
+        text-wrap: balance;
+      }
+
+      h1 em {
+        font-style: italic;
+        color: var(--yellow);
+      }
+
+      .description {
+        font-size: 0.975rem;
+        line-height: 1.72;
+        color: var(--secondary);
+        text-wrap: pretty;
+        max-width: 44ch;
+      }
+
+      /* ── Link section ── */
+      .link-section {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: center;
+        text-align: center;
+      }
+
+      .section-label {
+        font-size: 0.68rem;
+        text-transform: uppercase;
+        letter-spacing: 0.13em;
+        color: var(--yellow);
+        font-weight: 600;
+        opacity: 0.8;
+      }
+
+      .link-row {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+
+      .site-link {
+        font-family: 'Lora', Georgia, serif;
+        font-size: clamp(1.3rem, 4vw, 1.5rem);
+        font-weight: 700;
+        color: var(--yellow);
+        text-decoration: none;
+        border-bottom: 2px solid transparent;
+        transition: border-color 0.2s ease;
+        padding-bottom: 1px;
+      }
+
+      .site-link:hover,
+      .site-link:focus-visible {
+        border-bottom-color: var(--yellow);
+        outline: none;
+      }
+
+      /* ── Copy button (icon only) ── */
+      .copy-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: none;
+        border: none;
+        color: rgba(222, 201, 120, 0.45);
+        padding: 0.25rem;
+        border-radius: 0.35rem;
+        cursor: pointer;
+        transition: color 0.2s ease;
+      }
+
+      .copy-btn:hover {
+        color: var(--yellow);
+      }
+
+      .copy-btn:focus-visible {
+        outline: 2px solid var(--yellow);
+        outline-offset: 2px;
+      }
+
+      .copy-btn.copied {
+        color: var(--yellow);
+      }
+
+      .copy-btn svg {
+        width: 15px;
+        height: 15px;
+        flex-shrink: 0;
+      }
+
+      /* Toggle between default / copied states using CSS */
+      .copy-state-success { display: none; }
+
+      .copy-btn.copied .copy-state-default { display: none; }
+      .copy-btn.copied .copy-state-success  { display: contents; }
+
+      /* ── Credentials ── */
+      .credentials {
+        border-left: 3px solid var(--pink);
+        padding: 1rem 1.1rem;
+        font-size: 0.9rem;
+        color: var(--pink);
+        line-height: 1.68;
+      }
+
+      .credentials strong {
+        display: block;
+        margin-bottom: 0.3rem;
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        opacity: 0.85;
+      }
+
+      /* ── Install section ── */
+      .install-section {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+      }
+
+      .install-heading {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #fff;
+        margin-bottom: 0.35rem;
+      }
+
+      .install-sub {
+        font-size: 0.875rem;
+        line-height: 1.65;
+        color: var(--secondary);
+        opacity: 0.8;
+        margin-bottom: 1.25rem;
+        text-wrap: pretty;
+      }
+
+      /* ── Accordion ── */
+      .accordion {
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .accordion:last-child {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .accordion-trigger {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        padding: 1.05rem 0;
+        background: none;
+        border: none;
+        color: var(--secondary);
+        font-family: system-ui, sans-serif;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.09em;
+        cursor: pointer;
+        text-align: left;
+        transition: color 0.2s ease;
+      }
+
+      .accordion-trigger:hover,
+      .accordion-trigger:focus-visible {
+        color: #fff;
+        outline: none;
+      }
+
+      .accordion-trigger svg:first-child {
+        opacity: 0.75;
+        flex-shrink: 0;
+      }
+
+      .accordion-trigger:hover svg:first-child,
+      .accordion-trigger[aria-expanded="true"] svg:first-child {
+        opacity: 1;
+      }
+
+      .accordion-trigger[aria-expanded="true"] {
+        color: #fff;
+      }
+
+      .chevron {
+        margin-left: auto;
+        flex-shrink: 0;
+        opacity: 0.5;
+        transition: rotate 0.3s ease, opacity 0.2s ease;
+      }
+
+      .accordion-trigger[aria-expanded="true"] .chevron {
+        rotate: 180deg;
+        opacity: 0.9;
+      }
+
+      /* grid trick: works in all modern browsers */
+      .accordion-content {
+        display: grid;
+        grid-template-rows: 0fr;
+        transition: grid-template-rows 0.32s ease;
+      }
+
+      .accordion-content.is-open {
+        grid-template-rows: 1fr;
+      }
+
+      .accordion-inner {
+        overflow: hidden;
+      }
+
+      /* ── Steps ── */
+      .steps {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 0.55rem;
+        padding-bottom: 1.25rem;
+      }
+
+      .steps li {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.65rem;
+        font-size: 0.875rem;
+        line-height: 1.55;
+        color: var(--secondary);
+      }
+
+      .step-num {
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+        font-size: 0.62rem;
+        font-weight: 700;
+        min-width: 1.3rem;
+        height: 1.3rem;
+        border-radius: 9999px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 0.1rem;
+        flex-shrink: 0;
+      }
+
+      .key {
+        display: inline-block;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 0.3rem;
+        padding: 0 0.38rem;
+        font-size: 0.78rem;
+        font-family: monospace;
+        color: #fff;
+        line-height: 1.6;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <!-- Hero -->
+      <section class="hero" aria-labelledby="main-title">
+        <span class="badge">
+          <span class="badge-dot" aria-hidden="true"></span>
+          Actualización importante
+        </span>
+        <h1 id="main-title">Nos mudamos a<br /><em>una nueva dirección</em></h1>
+        <p class="description">
+          La aplicación de reservas tiene una nueva casa. A partir de ahora
+          encontrás todo en el siguiente link:
+        </p>
+      </section>
+
+      <!-- Link + copy button -->
+      <section class="link-section" aria-label="Nueva dirección">
+        <span class="section-label">Nueva dirección</span>
+        <div class="link-row">
+          <a
+            class="site-link"
+            href="https://www.caran6.com.ar"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            www.caran6.com.ar
+          </a>
+          <button
+            class="copy-btn"
+            id="copyBtn"
+            aria-label="Copiar enlace al portapapeles"
+            type="button"
+          >
+            <!-- Default state -->
+            <span class="copy-state-default">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+              </svg>
+            </span>
+            <!-- Copied state -->
+            <span class="copy-state-success" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </span>
+          </button>
+        </div>
+      </section>
+
+      <!-- Credentials note -->
+      <aside class="credentials" aria-label="Información de acceso">
+        <strong>Tus credenciales no cambiaron</strong>
+        Usá el mismo usuario y contraseña de siempre. No necesitás hacer nada
+        extra para acceder a tu cuenta.
+      </aside>
+
+      <!-- PWA install instructions -->
+      <section class="install-section" aria-labelledby="install-title">
+        <h2 class="install-heading" id="install-title">Guardá la app en tu teléfono</h2>
+        <p class="install-sub">
+          Accedé desde tu pantalla de inicio con un solo toque, sin abrir el navegador.
+        </p>
+
+        <!-- Android -->
+        <div class="accordion">
+          <button
+            class="accordion-trigger"
+            aria-expanded="false"
+            aria-controls="android-steps"
+            type="button"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M6 18c0 .55.45 1 1 1h1v3.5c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5V19h2v3.5c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5V19h1c.55 0 1-.45 1-1V8H6v10zM3.5 8C2.67 8 2 8.67 2 9.5v7c0 .83.67 1.5 1.5 1.5S5 17.33 5 16.5v-7C5 8.67 4.33 8 3.5 8zm17 0c-.83 0-1.5.67-1.5 1.5v7c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5v-7c0-.83-.67-1.5-1.5-1.5zm-4.97-5.84l1.3-1.3c.2-.2.2-.51 0-.71-.2-.2-.51-.2-.71 0l-1.48 1.48C13.85 1.23 12.95 1 12 1c-.96 0-1.86.23-2.66.63L7.85.15c-.2-.2-.51-.2-.71 0-.2.2-.2.51 0 .71l1.31 1.31C6.97 3.26 6 5.01 6 7h12c0-1.99-.97-3.75-2.47-4.84zM10 5H9V4h1v1zm5 0h-1V4h1v1z"/>
+            </svg>
+            Android (Chrome)
+            <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <div class="accordion-content" id="android-steps" role="region" aria-label="Pasos para Android">
+            <div class="accordion-inner">
+              <ol class="steps">
+                <li>
+                  <span class="step-num" aria-hidden="true">1</span>
+                  Abrí <strong>www.caran6.com.ar</strong> en Chrome
+                </li>
+                <li>
+                  <span class="step-num" aria-hidden="true">2</span>
+                  Tocá los <span class="key">⋮</span> tres puntos (arriba a la derecha)
+                </li>
+                <li>
+                  <span class="step-num" aria-hidden="true">3</span>
+                  Seleccioná <strong>"Agregar a pantalla de inicio"</strong>
+                </li>
+                <li>
+                  <span class="step-num" aria-hidden="true">4</span>
+                  Confirmá tocando <strong>"Agregar"</strong>
+                </li>
+              </ol>
+            </div>
+          </div>
+        </div>
+
+        <!-- iOS -->
+        <div class="accordion">
+          <button
+            class="accordion-trigger"
+            aria-expanded="false"
+            aria-controls="ios-steps"
+            type="button"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+            </svg>
+            iPhone / iPad (Safari)
+            <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <div class="accordion-content" id="ios-steps" role="region" aria-label="Pasos para iPhone y iPad">
+            <div class="accordion-inner">
+              <ol class="steps">
+                <li>
+                  <span class="step-num" aria-hidden="true">1</span>
+                  Abrí <strong>www.caran6.com.ar</strong> en Safari
+                </li>
+                <li>
+                  <span class="step-num" aria-hidden="true">2</span>
+                  Tocá el ícono de <strong>compartir</strong> <span class="key">↑</span> (abajo al centro)
+                </li>
+                <li>
+                  <span class="step-num" aria-hidden="true">3</span>
+                  Deslizá y tocá <strong>"Agregar a pantalla de inicio"</strong>
+                </li>
+                <li>
+                  <span class="step-num" aria-hidden="true">4</span>
+                  Tocá <strong>"Agregar"</strong> (arriba a la derecha)
+                </li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      // ── Copy button — no innerHTML, toggle CSS class only ──
+      const copyBtn = document.getElementById('copyBtn');
+      let copyTimer = null;
+
+      copyBtn?.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText('https://www.caran6.com.ar');
+          copyBtn.classList.add('copied');
+          copyBtn.setAttribute('aria-label', 'Enlace copiado al portapapeles');
+          clearTimeout(copyTimer);
+          copyTimer = setTimeout(() => {
+            copyBtn.classList.remove('copied');
+            copyBtn.setAttribute('aria-label', 'Copiar enlace al portapapeles');
+          }, 2200);
+        } catch {
+          // Clipboard API not available — silently ignore
+        }
+      });
+
+      // ── Accordion ──
+      document.querySelectorAll('.accordion-trigger').forEach((trigger) => {
+        trigger.addEventListener('click', () => {
+          const isOpen = trigger.getAttribute('aria-expanded') === 'true';
+          trigger.setAttribute('aria-expanded', String(!isOpen));
+          const contentId = trigger.getAttribute('aria-controls');
+          const content = document.getElementById(contentId);
+          content?.classList.toggle('is-open', !isOpen);
+        });
+      });
+    </script>
+  </body>
+</html>
